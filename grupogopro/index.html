@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Propuesta AI · Grupo GoPro | AgentBase</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@600;700&display=swap">
+    <style>
+        :root {
+            --red: #E63946;
+            --red-dim: #C1121F;
+            --blue: #2563EB;
+            --dark: #080C14;
+            --dark2: #0D1220;
+            --dark3: #131929;
+        }
+        body { font-family: 'Inter', system-ui, sans-serif; background: var(--dark); color: white; }
+        .font-display { font-family: 'Space Grotesk', sans-serif; }
+
+        .hero-bg {
+            background: radial-gradient(ellipse 80% 60% at 50% -10%, rgba(230,57,70,0.18) 0%, transparent 70%),
+                        linear-gradient(180deg, #0D1220 0%, #080C14 100%);
+        }
+
+        .badge-red {
+            background: rgba(230,57,70,0.12);
+            border: 1px solid rgba(230,57,70,0.3);
+            color: #E63946;
+        }
+        .badge-blue {
+            background: rgba(37,99,235,0.12);
+            border: 1px solid rgba(37,99,235,0.3);
+            color: #60A5FA;
+        }
+        .badge-green {
+            background: rgba(16,185,129,0.12);
+            border: 1px solid rgba(16,185,129,0.3);
+            color: #34D399;
+        }
+
+        .card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.07);
+            transition: all 0.25s ease;
+        }
+        .card:hover {
+            background: rgba(255,255,255,0.05);
+            border-color: rgba(230,57,70,0.25);
+            transform: translateY(-3px);
+        }
+
+        .divider { border-color: rgba(255,255,255,0.07); }
+
+        .price-card-regular {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+        .price-card-featured {
+            background: linear-gradient(135deg, rgba(230,57,70,0.12) 0%, rgba(230,57,70,0.06) 100%);
+            border: 1px solid rgba(230,57,70,0.35);
+            box-shadow: 0 0 40px rgba(230,57,70,0.08);
+        }
+
+        .btn-primary {
+            background: #E63946;
+            transition: all 0.2s ease;
+        }
+        .btn-primary:hover { background: #C1121F; transform: translateY(-1px); box-shadow: 0 8px 24px rgba(230,57,70,0.3); }
+
+        .btn-outline {
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: all 0.2s ease;
+        }
+        .btn-outline:hover { border-color: rgba(255,255,255,0.5); background: rgba(255,255,255,0.05); }
+
+        .step-num {
+            width: 36px; height: 36px;
+            background: linear-gradient(135deg, #E63946, #C1121F);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 0.9rem; flex-shrink: 0;
+        }
+
+        .feature-icon {
+            width: 48px; height: 48px; border-radius: 12px;
+            display: flex; align-items: center; justify-center: center;
+            flex-shrink: 0;
+        }
+
+        .agentbox-card {
+            background: linear-gradient(135deg, rgba(37,99,235,0.1) 0%, rgba(37,99,235,0.04) 100%);
+            border: 1px solid rgba(37,99,235,0.25);
+        }
+
+        .validity-bar {
+            background: linear-gradient(90deg, rgba(230,57,70,0.15), rgba(230,57,70,0.03));
+            border-left: 3px solid #E63946;
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .fade-up { animation: fadeUp 0.6s ease forwards; }
+        .delay-1 { animation-delay: 0.1s; opacity: 0; }
+        .delay-2 { animation-delay: 0.2s; opacity: 0; }
+        .delay-3 { animation-delay: 0.3s; opacity: 0; }
+
+        .section-label {
+            font-size: 0.65rem;
+            letter-spacing: 0.2em;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: #E63946;
+        }
+
+        .compare-row:nth-child(even) { background: rgba(255,255,255,0.02); }
+    </style>
+</head>
+<body>
+
+    <!-- Header / Hero -->
+    <header class="hero-bg min-h-screen flex flex-col justify-center px-6 py-20 relative overflow-hidden">
+        <!-- Grid texture -->
+        <div class="absolute inset-0 opacity-[0.025]" style="background-image: linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px); background-size: 40px 40px;"></div>
+
+        <div class="max-w-5xl mx-auto w-full relative z-10">
+
+            <!-- Top bar: logos -->
+            <div class="flex flex-col md:flex-row items-center justify-between gap-6 mb-16 fade-up">
+                <div class="flex items-center gap-5">
+                    <!-- Grupo GoPro logo (black→white via filter) -->
+                    <img src="https://grupogopro.mx/wp-content/uploads/2026/01/negro-con-fondo-transparente.png"
+                         alt="Grupo GoPro"
+                         class="h-14 w-auto"
+                         style="filter: brightness(0) invert(1);">
+                </div>
+                <div class="flex flex-col items-end gap-1 text-right">
+                    <div class="text-white/30 text-xs">Propuesta elaborada por</div>
+                    <div class="font-display font-bold text-lg text-white tracking-tight">AgentBase<span class="text-[#E63946]">.</span></div>
+                    <div class="text-white/30 text-xs">agntbase.xyz</div>
+                </div>
+            </div>
+
+            <!-- Folio / meta -->
+            <div class="flex flex-wrap gap-3 mb-8 fade-up delay-1">
+                <span class="badge-red text-xs px-3 py-1 rounded-full font-medium">Propuesta Confidencial</span>
+                <span class="bg-white/5 border border-white/10 text-white/50 text-xs px-3 py-1 rounded-full">Folio: AGT-2026-001</span>
+                <span class="bg-white/5 border border-white/10 text-white/50 text-xs px-3 py-1 rounded-full">Vigencia: 30 días</span>
+                <span class="bg-white/5 border border-white/10 text-white/50 text-xs px-3 py-1 rounded-full">Junio 2026</span>
+            </div>
+
+            <!-- Headline -->
+            <h1 class="font-display text-4xl md:text-6xl font-bold leading-tight tracking-tight mb-6 fade-up delay-2">
+                Implementación de<br>
+                <span class="text-[#E63946]">Agentes de IA</span><br>
+                para Grupo GoPro
+            </h1>
+
+            <p class="text-white/60 text-lg md:text-xl max-w-2xl mb-10 leading-relaxed fade-up delay-3">
+                Propuesta personalizada para transformar sus operaciones de seguridad privada con inteligencia artificial avanzada. Monitoreo inteligente, automatización y eficiencia operativa a un precio prioritario.
+            </p>
+
+            <div class="flex flex-wrap gap-6 text-sm fade-up delay-3">
+                <div class="flex items-center gap-2 text-white/50">
+                    <i class="fa-solid fa-check text-[#E63946] text-xs"></i>
+                    <span>Implementación en menos de 2 semanas</span>
+                </div>
+                <div class="flex items-center gap-2 text-white/50">
+                    <i class="fa-solid fa-check text-[#E63946] text-xs"></i>
+                    <span>Soporte dedicado incluido</span>
+                </div>
+                <div class="flex items-center gap-2 text-white/50">
+                    <i class="fa-solid fa-check text-[#E63946] text-xs"></i>
+                    <span>Sin contrato de permanencia</span>
+                </div>
+            </div>
+
+            <!-- Scroll hint -->
+            <div class="mt-16 flex items-center gap-2 text-white/25 text-xs">
+                <i class="fa-solid fa-arrow-down animate-bounce"></i>
+                <span>Desplázate para ver la propuesta completa</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Contexto: el problema -->
+    <section class="max-w-5xl mx-auto px-6 py-20">
+        <div class="section-label mb-4">El desafío</div>
+        <h2 class="font-display text-3xl md:text-4xl font-bold mb-4 tracking-tight">La seguridad privada<br>en la era de la IA</h2>
+        <p class="text-white/50 max-w-2xl mb-12 leading-relaxed">Las empresas de seguridad privada enfrentan presión creciente: más eventos que atender, mayor exigencia de los clientes y costos operativos en aumento. Los sistemas tradicionales ya no son suficientes.</p>
+
+        <div class="grid md:grid-cols-3 gap-5">
+            <div class="card rounded-2xl p-6">
+                <div class="w-10 h-10 rounded-xl bg-red-500/10 flex items-center justify-center mb-4">
+                    <i class="fa-solid fa-eye-slash text-[#E63946]"></i>
+                </div>
+                <h3 class="font-semibold mb-2">Monitoreo limitado</h3>
+                <p class="text-white/50 text-sm leading-relaxed">Un operador humano no puede vigilar eficientemente decenas de cámaras simultáneamente. Los incidentes pasan desapercibidos.</p>
+            </div>
+            <div class="card rounded-2xl p-6">
+                <div class="w-10 h-10 rounded-xl bg-orange-500/10 flex items-center justify-center mb-4">
+                    <i class="fa-solid fa-file-circle-xmark text-orange-400"></i>
+                </div>
+                <h3 class="font-semibold mb-2">Documentación manual</h3>
+                <p class="text-white/50 text-sm leading-relaxed">Los reportes de incidentes, rondines y novedades se generan manualmente, consumiendo tiempo valioso del personal.</p>
+            </div>
+            <div class="card rounded-2xl p-6">
+                <div class="w-10 h-10 rounded-xl bg-yellow-500/10 flex items-center justify-center mb-4">
+                    <i class="fa-solid fa-clock text-yellow-400"></i>
+                </div>
+                <h3 class="font-semibold mb-2">Respuesta tardía</h3>
+                <p class="text-white/50 text-sm leading-relaxed">Sin alertas automatizadas, la respuesta a eventos críticos depende de la atención del operador en el momento exacto.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Beneficios para sus clientes -->
+    <section class="bg-[#0D1220] border-y border-white/6 py-20">
+        <div class="max-w-5xl mx-auto px-6">
+            <div class="section-label mb-4">Para sus clientes finales</div>
+            <h2 class="font-display text-3xl md:text-4xl font-bold mb-3 tracking-tight">Lo que sus clientes<br>van a percibir</h2>
+            <p class="text-white/50 max-w-2xl mb-12 leading-relaxed">Sus clientes (empresas, condominios, instalaciones industriales) recibirán un servicio notablemente superior sin cambiar proveedor.</p>
+
+            <div class="grid md:grid-cols-2 gap-5">
+                <div class="card rounded-2xl p-7 flex gap-5">
+                    <div class="w-12 h-12 rounded-xl bg-[#E63946]/10 flex items-center justify-center flex-shrink-0">
+                        <i class="fa-solid fa-bolt text-[#E63946] text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold mb-2">Respuesta hasta 10x más rápida</h3>
+                        <p class="text-white/50 text-sm leading-relaxed">El agente detecta el incidente en tiempo real y notifica de inmediato al personal en campo, sin depender de un operador que lo note manualmente.</p>
+                    </div>
+                </div>
+
+                <div class="card rounded-2xl p-7 flex gap-5">
+                    <div class="w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center flex-shrink-0">
+                        <i class="fa-solid fa-file-lines text-blue-400 text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold mb-2">Reportes automáticos detallados</h3>
+                        <p class="text-white/50 text-sm leading-relaxed">Cada incidente genera automáticamente un reporte con hora, descripción y evidencia de cámara. Sus clientes reciben informes claros sin trabajo extra de su equipo.</p>
+                    </div>
+                </div>
+
+                <div class="card rounded-2xl p-7 flex gap-5">
+                    <div class="w-12 h-12 rounded-xl bg-green-500/10 flex items-center justify-center flex-shrink-0">
+                        <i class="fa-solid fa-shield-check text-green-400 text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold mb-2">Vigilancia 24/7 sin brechas</h3>
+                        <p class="text-white/50 text-sm leading-relaxed">El agente no se distrae, no se fatiga ni pierde el foco. Monitoreo continuo de todas las cámaras de forma simultánea, todo el tiempo.</p>
+                    </div>
+                </div>
+
+                <div class="card rounded-2xl p-7 flex gap-5">
+                    <div class="w-12 h-12 rounded-xl bg-purple-500/10 flex items-center justify-center flex-shrink-0">
+                        <i class="fa-solid fa-chart-line text-purple-400 text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold mb-2">Historial de actividad verificable</h3>
+                        <p class="text-white/50 text-sm leading-relaxed">Los clientes pueden consultar el log completo de actividad de sus instalaciones: rondines, alertas, accesos y eventos en un panel claro y transparente.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Capacidades del sistema - Cámaras -->
+    <section class="max-w-5xl mx-auto px-6 py-20">
+        <div class="section-label mb-4">Inteligencia en cámaras</div>
+        <h2 class="font-display text-3xl md:text-4xl font-bold mb-3 tracking-tight">Monitoreo inteligente<br>de videovigilancia</h2>
+        <p class="text-white/50 max-w-2xl mb-12 leading-relaxed">Uno de los módulos más potentes: el agente analiza los feeds de sus cámaras de seguridad en tiempo real y actúa de forma autónoma ante eventos críticos.</p>
+
+        <div class="grid md:grid-cols-3 gap-4 mb-8">
+            <div class="card rounded-2xl p-6">
+                <i class="fa-solid fa-person-walking-arrow-loop-left text-[#E63946] text-2xl mb-4 block"></i>
+                <h3 class="font-semibold mb-2 text-sm">Detección de intrusión</h3>
+                <p class="text-white/40 text-xs leading-relaxed">Identifica personas en zonas restringidas y activa alertas instantáneas al supervisor de guardia.</p>
+            </div>
+            <div class="card rounded-2xl p-6">
+                <i class="fa-solid fa-users text-blue-400 text-2xl mb-4 block"></i>
+                <h3 class="font-semibold mb-2 text-sm">Análisis de comportamiento</h3>
+                <p class="text-white/40 text-xs leading-relaxed">Detecta conductas anómalas: merodeo, caídas, aglomeraciones o accesos fuera de horario.</p>
+            </div>
+            <div class="card rounded-2xl p-6">
+                <i class="fa-solid fa-car text-yellow-400 text-2xl mb-4 block"></i>
+                <h3 class="font-semibold mb-2 text-sm">Control de acceso vehicular</h3>
+                <p class="text-white/40 text-xs leading-relaxed">Registro y verificación de placas en entradas. Alertas ante vehículos no autorizados o listas negras.</p>
+            </div>
+            <div class="card rounded-2xl p-6">
+                <i class="fa-solid fa-triangle-exclamation text-orange-400 text-2xl mb-4 block"></i>
+                <h3 class="font-semibold mb-2 text-sm">Detección de perímetro</h3>
+                <p class="text-white/40 text-xs leading-relaxed">Líneas virtuales y zonas de alerta configurables por instalación. Notificación inmediata al cruzarlas.</p>
+            </div>
+            <div class="card rounded-2xl p-6">
+                <i class="fa-solid fa-camera text-purple-400 text-2xl mb-4 block"></i>
+                <h3 class="font-semibold mb-2 text-sm">Multi-cámara simultáneo</h3>
+                <p class="text-white/40 text-xs leading-relaxed">Monitoreo de todas las cámaras al mismo tiempo. Sin puntos ciegos por distracción humana.</p>
+            </div>
+            <div class="card rounded-2xl p-6">
+                <i class="fa-solid fa-database text-green-400 text-2xl mb-4 block"></i>
+                <h3 class="font-semibold mb-2 text-sm">Evidencia automatizada</h3>
+                <p class="text-white/40 text-xs leading-relaxed">Cada alerta incluye captura del momento, timestamp y descripción generada por IA para el expediente.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Beneficios operativos internos -->
+    <section class="bg-[#0D1220] border-y border-white/6 py-20">
+        <div class="max-w-5xl mx-auto px-6">
+            <div class="section-label mb-4">Eficiencia operativa interna</div>
+            <h2 class="font-display text-3xl md:text-4xl font-bold mb-3 tracking-tight">Transforme sus flujos<br>de trabajo</h2>
+            <p class="text-white/50 max-w-2xl mb-12 leading-relaxed">El agente no solo vigila — también automatiza tareas administrativas y operativas que hoy consumen tiempo de su equipo.</p>
+
+            <div class="space-y-4">
+                <div class="card rounded-2xl p-6 flex items-start gap-5">
+                    <div class="step-num text-white">1</div>
+                    <div>
+                        <h3 class="font-semibold mb-1">Gestión de personal en campo</h3>
+                        <p class="text-white/50 text-sm leading-relaxed">Seguimiento de rondines, verificación de presencia en puntos de control y registro de actividad en tiempo real. El agente sabe dónde está cada guardia en todo momento.</p>
+                    </div>
+                </div>
+
+                <div class="card rounded-2xl p-6 flex items-start gap-5">
+                    <div class="step-num text-white">2</div>
+                    <div>
+                        <h3 class="font-semibold mb-1">Reportes automáticos de turno</h3>
+                        <p class="text-white/50 text-sm leading-relaxed">Al finalizar cada turno, el agente genera automáticamente el reporte de novedades con todos los eventos del período. Sin que el guardia tenga que escribir nada a mano.</p>
+                    </div>
+                </div>
+
+                <div class="card rounded-2xl p-6 flex items-start gap-5">
+                    <div class="step-num text-white">3</div>
+                    <div>
+                        <h3 class="font-semibold mb-1">Comunicación inteligente con clientes</h3>
+                        <p class="text-white/50 text-sm leading-relaxed">El agente puede responder consultas de sus clientes vía WhatsApp o correo: estado de servicio, reportes, históricos y alertas activas — sin intervención de su equipo.</p>
+                    </div>
+                </div>
+
+                <div class="card rounded-2xl p-6 flex items-start gap-5">
+                    <div class="step-num text-white">4</div>
+                    <div>
+                        <h3 class="font-semibold mb-1">Asignación y logística de guardias</h3>
+                        <p class="text-white/50 text-sm leading-relaxed">El agente sugiere asignaciones de personal basadas en carga de trabajo, historial y ubicación. Optimiza la cobertura y reduce tiempos muertos.</p>
+                    </div>
+                </div>
+
+                <div class="card rounded-2xl p-6 flex items-start gap-5">
+                    <div class="step-num text-white">5</div>
+                    <div>
+                        <h3 class="font-semibold mb-1">Integración con sistemas existentes</h3>
+                        <p class="text-white/50 text-sm leading-relaxed">El agente se conecta con su software actual de nómina, CRM o sistema de acceso. No requiere cambiar sus herramientas ni reemplazar infraestructura.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing -->
+    <section id="inversion" class="max-w-5xl mx-auto px-6 py-20">
+        <div class="section-label mb-4">Inversión</div>
+        <h2 class="font-display text-3xl md:text-4xl font-bold mb-3 tracking-tight">Su inversión mensual</h2>
+        <p class="text-white/50 max-w-xl mb-12 leading-relaxed">Para Grupo GoPro hemos preparado un precio prioritario con todos los módulos incluidos desde el primer día.</p>
+
+        <!-- Validity notice -->
+        <div class="validity-bar rounded-lg px-5 py-4 mb-10 flex items-start gap-3">
+            <i class="fa-solid fa-clock text-[#E63946] mt-0.5"></i>
+            <div class="text-sm">
+                <span class="font-semibold text-white/90">Precio prioritario vigente hasta el 10 de julio de 2026.</span>
+                <span class="text-white/50 ml-1">Después de esta fecha se aplica la tarifa regular. Aplica para nuevos contratos.</span>
+            </div>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-6 mb-8">
+
+            <!-- Plan regular -->
+            <div class="price-card-regular rounded-2xl p-8 flex flex-col">
+                <div class="text-white/40 text-xs font-semibold tracking-widest uppercase mb-4">Tarifa regular</div>
+                <div class="flex items-baseline gap-2 mb-2">
+                    <span class="font-display text-4xl font-bold text-white/50 line-through">$19,990</span>
+                    <span class="text-white/30 text-sm">/mes MXN</span>
+                </div>
+                <div class="text-white/40 text-sm mb-8">+ $5,000 instalación única</div>
+                <ul class="space-y-3 text-sm text-white/40 flex-1">
+                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-white/20 text-xs w-4"></i>Todos los módulos de IA</li>
+                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-white/20 text-xs w-4"></i>AgentBox en arrendamiento</li>
+                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-white/20 text-xs w-4"></i>Soporte técnico</li>
+                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-white/20 text-xs w-4"></i>Dashboard en tiempo real</li>
+                </ul>
+            </div>
+
+            <!-- Plan prioritario -->
+            <div class="price-card-featured rounded-2xl p-8 flex flex-col relative overflow-hidden">
+                <div class="absolute top-5 right-5">
+                    <span class="badge-red text-xs px-3 py-1 rounded-full font-semibold">PRECIO PRIORITARIO</span>
+                </div>
+                <div class="text-[#E63946] text-xs font-semibold tracking-widest uppercase mb-4">Para Grupo GoPro</div>
+                <div class="flex items-baseline gap-2 mb-2">
+                    <span class="font-display text-5xl font-bold text-white">$14,990</span>
+                    <span class="text-white/50 text-sm">/mes MXN</span>
+                </div>
+                <div class="text-white/50 text-sm mb-1">+ $5,000 instalación única</div>
+                <div class="badge-green inline-flex items-center gap-1.5 text-xs px-3 py-1 rounded-full w-fit mb-8">
+                    <i class="fa-solid fa-tag text-xs"></i>
+                    Ahorro de $5,000 / mes
+                </div>
+                <ul class="space-y-3 text-sm flex-1">
+                    <li class="flex items-center gap-2 text-white/80"><i class="fa-solid fa-check text-[#E63946] text-xs w-4"></i>Todos los módulos de IA</li>
+                    <li class="flex items-center gap-2 text-white/80"><i class="fa-solid fa-check text-[#E63946] text-xs w-4"></i>AgentBox en arrendamiento incluido</li>
+                    <li class="flex items-center gap-2 text-white/80"><i class="fa-solid fa-check text-[#E63946] text-xs w-4"></i>Soporte dedicado 24/7</li>
+                    <li class="flex items-center gap-2 text-white/80"><i class="fa-solid fa-check text-[#E63946] text-xs w-4"></i>Dashboard en tiempo real</li>
+                    <li class="flex items-center gap-2 text-white/80"><i class="fa-solid fa-check text-[#E63946] text-xs w-4"></i>Integración con sistemas actuales</li>
+                    <li class="flex items-center gap-2 text-white/80"><i class="fa-solid fa-check text-[#E63946] text-xs w-4"></i>Capacitación del equipo incluida</li>
+                </ul>
+
+                <div class="mt-8 pt-6 border-t border-[#E63946]/20">
+                    <div class="text-white/40 text-xs mb-2">Inversión total primer mes</div>
+                    <div class="font-display text-2xl font-bold text-[#E63946]">$19,990 MXN</div>
+                    <div class="text-white/40 text-xs">(incluye instalación + primer mes de servicio)</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- AgentBox -->
+        <div class="agentbox-card rounded-2xl p-8">
+            <div class="flex flex-col md:flex-row gap-8 items-start">
+                <div class="flex-1">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-10 h-10 rounded-xl bg-blue-500/15 flex items-center justify-center">
+                            <i class="fa-solid fa-microchip text-blue-400 text-lg"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-display font-bold text-lg">AgentBox</h3>
+                            <div class="badge-blue text-xs px-2 py-0.5 rounded-full inline-block mt-0.5">Hardware incluido en arrendamiento</div>
+                        </div>
+                    </div>
+                    <p class="text-white/55 text-sm leading-relaxed mb-4">El AgentBox es el dispositivo de borde que procesa localmente las señales de cámaras y sensores de sus instalaciones. Garantiza baja latencia, operación sin internet y seguridad total de sus datos.</p>
+                    <ul class="space-y-2 text-sm text-white/50">
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-circle-dot text-blue-400 text-xs w-4"></i>Procesamiento local en sitio — sin latencia de nube</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-circle-dot text-blue-400 text-xs w-4"></i>Opera sin conexión a internet si es necesario</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-circle-dot text-blue-400 text-xs w-4"></i>Sus datos nunca salen de sus instalaciones</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-circle-dot text-blue-400 text-xs w-4"></i>Compatible con cámaras IP existentes</li>
+                    </ul>
+                </div>
+                <div class="bg-white/5 rounded-xl p-6 md:w-64 flex-shrink-0 text-center">
+                    <div class="text-white/40 text-xs uppercase tracking-widest mb-3">Opción de adquisición</div>
+                    <div class="font-display text-3xl font-bold text-white mb-1">$10,000</div>
+                    <div class="text-white/40 text-xs mb-4">MXN (pago único)</div>
+                    <div class="text-white/50 text-xs leading-relaxed">
+                        El AgentBox se arrienda durante la vigencia del servicio.<br><br>
+                        Si desea adquirirlo de forma permanente, el costo es de <strong class="text-white/70">$10,000 MXN</strong> como pago único adicional.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tabla comparativa resumen -->
+    <section class="bg-[#0D1220] border-y border-white/6 py-20">
+        <div class="max-w-4xl mx-auto px-6">
+            <div class="section-label mb-4">Comparativa</div>
+            <h2 class="font-display text-2xl md:text-3xl font-bold mb-10 tracking-tight">WEEX con IA vs. Operación tradicional</h2>
+
+            <div class="rounded-2xl overflow-hidden border border-white/7">
+                <div class="grid grid-cols-3 bg-[#E63946]/10 px-6 py-3 text-xs font-semibold uppercase tracking-widest">
+                    <div class="text-white/50">Área</div>
+                    <div class="text-center text-white/40">Sin IA</div>
+                    <div class="text-center text-[#E63946]">Con AgentBase IA</div>
+                </div>
+                <div class="divide-y divide-white/5">
+                    <div class="compare-row grid grid-cols-3 px-6 py-4 text-sm items-center">
+                        <div class="text-white/70">Monitoreo de cámaras</div>
+                        <div class="text-center text-white/35">Manual, 1 operador</div>
+                        <div class="text-center text-green-400 font-medium">100% cámaras, 24/7</div>
+                    </div>
+                    <div class="compare-row grid grid-cols-3 px-6 py-4 text-sm items-center">
+                        <div class="text-white/70">Tiempo de respuesta</div>
+                        <div class="text-center text-white/35">2–10 minutos</div>
+                        <div class="text-center text-green-400 font-medium">Menos de 10 segundos</div>
+                    </div>
+                    <div class="compare-row grid grid-cols-3 px-6 py-4 text-sm items-center">
+                        <div class="text-white/70">Reportes de turno</div>
+                        <div class="text-center text-white/35">Redacción manual</div>
+                        <div class="text-center text-green-400 font-medium">Generación automática</div>
+                    </div>
+                    <div class="compare-row grid grid-cols-3 px-6 py-4 text-sm items-center">
+                        <div class="text-white/70">Verificación de rondines</div>
+                        <div class="text-center text-white/35">Confianza en el guardia</div>
+                        <div class="text-center text-green-400 font-medium">Tracking en tiempo real</div>
+                    </div>
+                    <div class="compare-row grid grid-cols-3 px-6 py-4 text-sm items-center">
+                        <div class="text-white/70">Atención a clientes</div>
+                        <div class="text-center text-white/35">Teléfono / correo manual</div>
+                        <div class="text-center text-green-400 font-medium">Agente IA 24/7</div>
+                    </div>
+                    <div class="compare-row grid grid-cols-3 px-6 py-4 text-sm items-center">
+                        <div class="text-white/70">Historial verificable</div>
+                        <div class="text-center text-white/35">Archivos en papel/Excel</div>
+                        <div class="text-center text-green-400 font-medium">Dashboard digital</div>
+                    </div>
+                    <div class="compare-row grid grid-cols-3 px-6 py-4 text-sm items-center">
+                        <div class="text-white/70">Detección de anomalías</div>
+                        <div class="text-center text-white/35">Ojo humano (con fatiga)</div>
+                        <div class="text-center text-green-400 font-medium">IA continua sin fatiga</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Próximos pasos -->
+    <section class="max-w-5xl mx-auto px-6 py-20">
+        <div class="section-label mb-4">Proceso de implementación</div>
+        <h2 class="font-display text-3xl font-bold mb-10 tracking-tight">Listos para arrancar en 2 semanas</h2>
+
+        <div class="grid md:grid-cols-4 gap-5 mb-16">
+            <div class="text-center">
+                <div class="w-14 h-14 rounded-full bg-[#E63946]/10 border border-[#E63946]/30 flex items-center justify-center mx-auto mb-4">
+                    <span class="font-display font-bold text-[#E63946]">1</span>
+                </div>
+                <h3 class="font-semibold text-sm mb-1">Aceptar propuesta</h3>
+                <p class="text-white/40 text-xs">Confirmación y firma del contrato de servicio</p>
+            </div>
+            <div class="text-center">
+                <div class="w-14 h-14 rounded-full bg-[#E63946]/10 border border-[#E63946]/30 flex items-center justify-center mx-auto mb-4">
+                    <span class="font-display font-bold text-[#E63946]">2</span>
+                </div>
+                <h3 class="font-semibold text-sm mb-1">Diagnóstico</h3>
+                <p class="text-white/40 text-xs">Levantamiento de sus instalaciones y sistemas actuales</p>
+            </div>
+            <div class="text-center">
+                <div class="w-14 h-14 rounded-full bg-[#E63946]/10 border border-[#E63946]/30 flex items-center justify-center mx-auto mb-4">
+                    <span class="font-display font-bold text-[#E63946]">3</span>
+                </div>
+                <h3 class="font-semibold text-sm mb-1">Instalación</h3>
+                <p class="text-white/40 text-xs">Configuración del AgentBox y conexión con sus cámaras</p>
+            </div>
+            <div class="text-center">
+                <div class="w-14 h-14 rounded-full bg-[#E63946]/10 border border-[#E63946]/30 flex items-center justify-center mx-auto mb-4">
+                    <span class="font-display font-bold text-[#E63946]">4</span>
+                </div>
+                <h3 class="font-semibold text-sm mb-1">Go Live</h3>
+                <p class="text-white/40 text-xs">Capacitación al equipo y sistema en producción</p>
+            </div>
+        </div>
+
+        <!-- CTA -->
+        <div class="card rounded-2xl p-10 text-center" style="background: radial-gradient(ellipse 70% 60% at 50% 100%, rgba(230,57,70,0.1) 0%, transparent 70%);">
+            <div class="badge-red inline-block px-3 py-1 rounded-full text-xs font-semibold mb-5">Oferta vigente hasta el 10 de julio de 2026</div>
+            <h3 class="font-display text-3xl font-bold mb-3">¿Listo para implementar?</h3>
+            <p class="text-white/50 mb-8 max-w-md mx-auto text-sm leading-relaxed">Acepta la propuesta o agenda una llamada para resolver cualquier duda. Nuestro equipo está disponible para acompañarlos en cada paso.</p>
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
+                <a href="https://wa.me/52XXXXXXXXXX?text=Hola,%20quiero%20aceptar%20la%20propuesta%20para%20Grupo%20GoPro"
+                   target="_blank"
+                   class="btn-primary px-8 py-4 rounded-xl font-semibold flex items-center justify-center gap-3 cursor-pointer">
+                    <i class="fa-brands fa-whatsapp text-lg"></i>
+                    <span>Aceptar propuesta</span>
+                </a>
+                <a href="https://wa.me/52XXXXXXXXXX?text=Hola,%20tengo%20preguntas%20sobre%20la%20propuesta%20para%20Grupo%20GoPro"
+                   target="_blank"
+                   class="btn-outline px-8 py-4 rounded-xl font-medium text-white/80 flex items-center justify-center gap-3 cursor-pointer">
+                    <i class="fa-solid fa-comment-dots"></i>
+                    <span>Tengo preguntas</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="border-t border-white/6 py-10 px-6">
+        <div class="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-4">
+                <div class="font-display font-bold text-lg text-white">AgentBase<span class="text-[#E63946]">.</span></div>
+                <span class="text-white/20 text-xs">Propuesta elaborada para Grupo GoPro · Junio 2026</span>
+            </div>
+            <div class="text-white/25 text-xs">
+                Esta propuesta es confidencial y está destinada únicamente para Grupo GoPro.
+                Folio AGT-2026-001 · agntbase.xyz
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>
