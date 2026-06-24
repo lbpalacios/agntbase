@@ -6,479 +6,554 @@
 <title>Programa Ennia · Allayi</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-<script>tailwind.config={theme:{extend:{fontFamily:{sans:['Inter','sans-serif']}}}}</script>
 <style>
-*{font-family:'Inter',sans-serif}
-.g{background:linear-gradient(135deg,#3B82F6,#6366F1)}
-.gt{background:linear-gradient(135deg,#3B82F6,#6366F1);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.gb{border:1px solid transparent;background:linear-gradient(#1E293B,#1E293B) padding-box,linear-gradient(135deg,#3B82F6,#6366F1) border-box}
+*{font-family:'Inter',sans-serif;box-sizing:border-box}
+body{background:#F1F3F8;color:#111827;margin:0}
+
+/* Layout */
+.shell{display:flex;height:100vh;overflow:hidden}
+.icon-sidebar{width:60px;background:#fff;border-right:1px solid #E5E7EB;display:flex;flex-direction:column;align-items:center;padding:16px 0;gap:4px;flex-shrink:0;z-index:20}
+.main-wrap{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.topbar{background:#fff;border-bottom:1px solid #E5E7EB;padding:0 24px;height:60px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;z-index:10}
+.content{flex:1;overflow-y:auto;padding:24px}
+
+/* Icon sidebar items */
+.si{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#9CA3AF;transition:all .2s}
+.si:hover{background:#FFF4EE;color:#E85D04}
+.si.active{background:#E85D04;color:#fff;box-shadow:0 4px 12px rgba(232,93,4,.3)}
+.si-logo{width:38px;height:38px;border-radius:10px;background:#E85D04;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:15px;margin-bottom:12px;box-shadow:0 4px 12px rgba(232,93,4,.35)}
+.si-divider{width:24px;height:1px;background:#E5E7EB;margin:6px 0}
+
+/* Top nav */
+.nav-pill{padding:6px 14px;border-radius:20px;font-size:.8rem;font-weight:500;color:#6B7280;cursor:pointer;transition:all .2s;white-space:nowrap}
+.nav-pill:hover{color:#111827;background:#F3F4F6}
+.nav-pill.active{background:#111827;color:#fff}
+
+/* Cards */
+.card{background:#fff;border-radius:14px;padding:20px;box-shadow:0 1px 3px rgba(0,0,0,.06),0 4px 12px rgba(0,0,0,.04)}
+.card-orange{background:#E85D04;border-radius:14px;padding:20px;box-shadow:0 6px 20px rgba(232,93,4,.35);color:#fff}
+.card-sm{background:#fff;border-radius:12px;padding:16px;box-shadow:0 1px 3px rgba(0,0,0,.06),0 2px 8px rgba(0,0,0,.04)}
+
+/* Stats */
+.stat-val{font-size:1.75rem;font-weight:700;line-height:1.1;color:#111827}
+.stat-label{font-size:.72rem;color:#9CA3AF;font-weight:500;text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px}
+.stat-delta-up{font-size:.72rem;color:#10B981;font-weight:600}
+.stat-delta-down{font-size:.72rem;color:#EF4444;font-weight:600}
+
+/* Tags */
+.tag{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:20px;font-size:.7rem;font-weight:600}
+.tag-green{background:#ECFDF5;color:#059669}
+.tag-amber{background:#FFFBEB;color:#D97706}
+.tag-blue{background:#EFF6FF;color:#2563EB}
+.tag-red{background:#FEF2F2;color:#DC2626}
+.tag-gray{background:#F3F4F6;color:#6B7280}
+.tag-orange{background:#FFF4EE;color:#E85D04}
+
+/* Progress */
+.ptrack{height:5px;background:#F3F4F6;border-radius:3px;overflow:hidden}
+.pfill{height:100%;border-radius:3px;background:#E85D04}
+.pfill-green{height:100%;border-radius:3px;background:#10B981}
+.pfill-blue{height:100%;border-radius:3px;background:#3B82F6}
+.pfill-amber{height:100%;border-radius:3px;background:#F59E0B}
+.pfill-red{height:100%;border-radius:3px;background:#EF4444}
+
+/* Bar chart */
+.bar-wrap{display:flex;align-items:flex-end;gap:6px;height:90px}
+.bar-group{display:flex;align-items:flex-end;gap:2px;flex:1}
+.bar{border-radius:4px 4px 0 0;transition:opacity .2s;cursor:default}
+.bar:hover{opacity:.8}
+.bar-a{background:#E85D04}
+.bar-b{background:#E5E7EB}
+
+/* Table */
+.tbl{width:100%;border-collapse:collapse}
+.tbl th{text-align:left;font-size:.7rem;font-weight:600;color:#9CA3AF;text-transform:uppercase;letter-spacing:.04em;padding:10px 14px;border-bottom:1px solid #F3F4F6}
+.tbl td{padding:11px 14px;font-size:.8rem;color:#374151;border-bottom:1px solid #F9FAFB}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tbody tr:hover{background:#FAFAFA}
+
+/* Btn */
+.btn-orange{background:#E85D04;color:#fff;border:none;border-radius:9px;padding:9px 18px;font-size:.82rem;font-weight:600;cursor:pointer;transition:all .2s;box-shadow:0 3px 10px rgba(232,93,4,.25)}
+.btn-orange:hover{background:#C2410C;transform:translateY(-1px)}
+.btn-white{background:#fff;color:#374151;border:1px solid #E5E7EB;border-radius:9px;padding:8px 16px;font-size:.82rem;font-weight:500;cursor:pointer;transition:all .2s}
+.btn-white:hover{border-color:#D1D5DB;background:#F9FAFB}
+
+/* Input */
+.inp{width:100%;background:#F9FAFB;border:1px solid #E5E7EB;border-radius:9px;padding:10px 14px;font-size:.82rem;color:#111827;outline:none;transition:border-color .2s}
+.inp:focus{border-color:#E85D04;background:#fff}
+.inp::placeholder{color:#9CA3AF}
+
+/* Views */
 .view{display:none}.view.active{display:block}
-.nav-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;cursor:pointer;transition:all .2s;color:#94A3B8;font-size:.875rem;font-weight:500}
-.nav-item:hover{background:#1E293B;color:#F1F5F9}
-.nav-item.active{background:linear-gradient(135deg,rgba(59,130,246,.15),rgba(99,102,241,.15));color:#F1F5F9;border:1px solid rgba(59,130,246,.25)}
-.nav-item.active .dot{background:linear-gradient(135deg,#3B82F6,#6366F1)}
-.dot{width:6px;height:6px;border-radius:50%;background:#334155;flex-shrink:0}
-.card{background:#1E293B;border:1px solid #334155;border-radius:16px;padding:24px;transition:transform .2s,box-shadow .2s}
-.card:hover{transform:translateY(-2px);box-shadow:0 12px 40px rgba(59,130,246,.1)}
-.btn{background:linear-gradient(135deg,#3B82F6,#6366F1);color:#fff;font-weight:600;border-radius:10px;padding:10px 20px;font-size:.875rem;cursor:pointer;transition:opacity .2s,transform .15s;border:none}
-.btn:hover{opacity:.9;transform:translateY(-1px)}
-.btn-ghost{background:transparent;border:1px solid #334155;color:#94A3B8;font-weight:500;border-radius:10px;padding:10px 20px;font-size:.875rem;cursor:pointer;transition:all .2s}
-.btn-ghost:hover{border-color:#475569;color:#F1F5F9}
-.input{width:100%;background:#0F172A;border:1px solid #334155;border-radius:10px;padding:12px 16px;color:#F1F5F9;font-size:.875rem;outline:none;transition:border-color .2s}
-.input:focus{border-color:#3B82F6}
-.input::placeholder{color:#475569}
-.badge-green{background:rgba(16,185,129,.12);color:#34D399;border:1px solid rgba(16,185,129,.2);padding:3px 10px;border-radius:20px;font-size:.75rem;font-weight:600}
-.badge-amber{background:rgba(245,158,11,.12);color:#FCD34D;border:1px solid rgba(245,158,11,.2);padding:3px 10px;border-radius:20px;font-size:.75rem;font-weight:600}
-.badge-blue{background:rgba(59,130,246,.12);color:#60A5FA;border:1px solid rgba(59,130,246,.2);padding:3px 10px;border-radius:20px;font-size:.75rem;font-weight:600}
-.badge-slate{background:rgba(71,85,105,.2);color:#64748B;border:1px solid rgba(71,85,105,.3);padding:3px 10px;border-radius:20px;font-size:.75rem;font-weight:600}
-.progress-track{height:6px;background:#334155;border-radius:3px;overflow:hidden}
-.progress-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,#3B82F6,#6366F1)}
-.table-row{border-bottom:1px solid rgba(51,65,85,.5);transition:background .15s}
-.table-row:hover{background:rgba(51,65,85,.2)}
-.sidebar{width:240px;min-height:100vh;background:#0A0F1E;border-right:1px solid #1E293B;display:flex;flex-direction:column;flex-shrink:0;position:fixed;top:0;left:0;z-index:40}
-.main{margin-left:240px;min-height:100vh;background:#0F172A}
-.topbar{background:#0A0F1E;border-bottom:1px solid #1E293B;padding:0 28px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:30}
-.content{padding:28px}
-/* typing */
-.td{animation:td 1.4s infinite;width:6px;height:6px;border-radius:50%;background:#94A3B8}
+
+/* Nav items for icon sidebar tooltip */
+.si{position:relative}
+.si::after{content:attr(data-tip);position:absolute;left:52px;top:50%;transform:translateY(-50%);background:#111827;color:#fff;font-size:.72rem;padding:4px 9px;border-radius:6px;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .15s;z-index:99}
+.si:hover::after{opacity:1}
+
+/* Modal */
+.overlay{backdrop-filter:blur(4px);background:rgba(0,0,0,.4)}
+
+/* Chat */
+.msg-in{animation:fi .2s ease}
+@keyframes fi{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+.td{animation:tda 1.3s infinite;width:5px;height:5px;border-radius:50%;background:#D1D5DB;display:inline-block}
 .td:nth-child(2){animation-delay:.2s}.td:nth-child(3){animation-delay:.4s}
-@keyframes td{0%,60%,100%{transform:translateY(0);opacity:.4}30%{transform:translateY(-4px);opacity:1}}
-.msg-in{animation:fi .25s ease}
-@keyframes fi{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
-/* modal */
-.overlay{backdrop-filter:blur(6px);background:rgba(0,0,0,.7)}
-/* chat */
-#chat-win{max-height:480px;display:flex;flex-direction:column}
-#chat-msgs{overflow-y:auto;flex:1}
+@keyframes tda{0%,60%,100%{transform:translateY(0);opacity:.4}30%{transform:translateY(-3px);opacity:1}}
+
+/* Rating */
+.rb{background:#F9FAFB;border:1px solid #E5E7EB;border-radius:9px;padding:9px;cursor:pointer;font-size:.82rem;color:#6B7280;transition:all .2s;text-align:center}
+.rb.sel{border-color:#E85D04;color:#E85D04;background:#FFF4EE}
+.rb:hover{border-color:#D1D5DB}
+
+/* Scroll */
+.content::-webkit-scrollbar{width:5px}
+.content::-webkit-scrollbar-thumb{background:#E5E7EB;border-radius:3px}
 #chat-msgs::-webkit-scrollbar{width:3px}
-#chat-msgs::-webkit-scrollbar-thumb{background:#334155;border-radius:2px}
-/* pulse */
-@keyframes pr{0%{transform:scale(1);opacity:.8}100%{transform:scale(1.5);opacity:0}}
-.cpulse::before{content:'';position:absolute;inset:-4px;border-radius:50%;background:linear-gradient(135deg,#3B82F6,#6366F1);animation:pr 2s ease-out infinite;z-index:-1}
-/* rating */
-.rb{background:#0F172A;border:1px solid #334155;border-radius:10px;padding:10px;cursor:pointer;color:#94A3B8;font-size:.875rem;transition:all .2s}
-.rb.sel{border-color:#3B82F6;color:#60A5FA;background:rgba(59,130,246,.08)}
+#chat-msgs::-webkit-scrollbar-thumb{background:#E5E7EB;border-radius:2px}
+
+/* Activity row */
+.act-row{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid #F9FAFB}
+.act-row:last-child{border-bottom:none}
+.act-ico{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 </style>
 </head>
-<body class="bg-[#0F172A] text-[#F1F5F9]">
+<body>
+<div class="shell">
 
-<!-- ═══════════════ SIDEBAR ═══════════════ -->
-<aside class="sidebar">
-  <!-- Logo -->
-  <div class="p-5 border-b border-[#1E293B]">
-    <div class="flex items-center gap-3">
-      <div class="w-9 h-9 rounded-xl g flex items-center justify-center text-white font-black text-sm">A</div>
-      <div>
-        <div class="text-white font-bold text-sm">Allayi</div>
-        <div class="text-[#475569] text-xs">× KualiFin</div>
-      </div>
-    </div>
+<!-- ═══ ICON SIDEBAR ═══ -->
+<aside class="icon-sidebar">
+  <div class="si-logo">A</div>
+  <div class="si-divider"></div>
+
+  <div class="si active" data-tip="Dashboard" onclick="nav('dashboard')">
+    <svg width="17" height="17" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5" stroke-width="2"/><rect x="14" y="3" width="7" height="7" rx="1.5" stroke-width="2"/><rect x="3" y="14" width="7" height="7" rx="1.5" stroke-width="2"/><rect x="14" y="14" width="7" height="7" rx="1.5" stroke-width="2"/></svg>
+  </div>
+  <div class="si" data-tip="Sesión 1" onclick="nav('sesion1')">
+    <svg width="17" height="17" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+  </div>
+  <div class="si" data-tip="Buzón de Retos" onclick="nav('retos')">
+    <svg width="17" height="17" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+  </div>
+  <div class="si" data-tip="Tracking" onclick="nav('tracking')">
+    <svg width="17" height="17" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+  </div>
+  <div class="si" data-tip="Contacto" onclick="nav('contacto')">
+    <svg width="17" height="17" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
   </div>
 
-  <!-- Nav -->
-  <nav class="p-3 flex-1 space-y-1 mt-1">
-    <div class="text-[#475569] text-[10px] font-semibold uppercase tracking-widest px-3 mb-2">Programa</div>
-
-    <div class="nav-item active" onclick="navigate('dashboard')">
-      <span class="dot"></span>
-      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
-      Dashboard
-    </div>
-
-    <div class="text-[#475569] text-[10px] font-semibold uppercase tracking-widest px-3 mt-4 mb-2">Sesiones</div>
-
-    <div class="nav-item" onclick="navigate('sesion1')">
-      <span class="dot"></span>
-      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-      Sesión 1
-      <span class="badge-amber ml-auto">Activa</span>
-    </div>
-
-    <div class="nav-item opacity-40 cursor-not-allowed" title="Próximamente">
-      <span class="dot"></span>
-      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
-      Sesión 2–6
-    </div>
-
-    <div class="text-[#475569] text-[10px] font-semibold uppercase tracking-widest px-3 mt-4 mb-2">Herramientas</div>
-
-    <div class="nav-item" onclick="navigate('retos')">
-      <span class="dot"></span>
-      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
-      Buzón de Retos
-    </div>
-
-    <div class="nav-item" onclick="navigate('tracking')">
-      <span class="dot"></span>
-      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
-      Tracking
-    </div>
-
-    <div class="nav-item" onclick="navigate('contacto')">
-      <span class="dot"></span>
-      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-      Contacto
-    </div>
-  </nav>
-
-  <!-- User / program info -->
-  <div class="p-4 border-t border-[#1E293B]">
-    <div class="flex items-center gap-3">
-      <div class="w-8 h-8 rounded-full g flex items-center justify-center text-white text-xs font-bold">MG</div>
-      <div class="flex-1 min-w-0">
-        <div class="text-white text-xs font-semibold truncate">María García</div>
-        <div class="text-[#475569] text-[11px]">Participante</div>
-      </div>
-      <div class="w-2 h-2 rounded-full bg-emerald-400"></div>
-    </div>
+  <div style="flex:1"></div>
+  <div class="si-divider"></div>
+  <div class="si" data-tip="Soporte" onclick="toggleChat()">
+    <svg width="17" height="17" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
   </div>
 </aside>
 
-<!-- ═══════════════ MAIN ═══════════════ -->
-<div class="main">
+<!-- ═══ MAIN ═══ -->
+<div class="main-wrap">
 
-  <!-- Top bar -->
+  <!-- TOPBAR -->
   <header class="topbar">
-    <div class="flex items-center gap-3">
-      <div id="topbar-breadcrumb" class="text-[#94A3B8] text-sm flex items-center gap-2">
-        <span class="text-white font-semibold" id="topbar-title">Dashboard</span>
+    <!-- Left: brand + nav tabs -->
+    <div style="display:flex;align-items:center;gap:24px">
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="font-size:.95rem;font-weight:700;color:#111827">Allayi</span>
+        <span style="color:#D1D5DB;font-size:.85rem">×</span>
+        <span style="font-size:.82rem;color:#9CA3AF;font-weight:500">KualiFin</span>
       </div>
+      <nav style="display:flex;align-items:center;gap:4px">
+        <div class="nav-pill active" id="np-dashboard" onclick="nav('dashboard')">Dashboard</div>
+        <div class="nav-pill" id="np-sesion1" onclick="nav('sesion1')">Sesión 1</div>
+        <div class="nav-pill" id="np-retos" onclick="nav('retos')">Retos</div>
+        <div class="nav-pill" id="np-tracking" onclick="nav('tracking')">Tracking</div>
+        <div class="nav-pill" id="np-contacto" onclick="nav('contacto')">Contacto</div>
+      </nav>
     </div>
-    <div class="flex items-center gap-3">
-      <div class="flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/20 rounded-full px-3 py-1.5">
-        <div class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></div>
-        <span class="text-emerald-400 text-xs font-semibold">Sesión 1 activa</span>
+    <!-- Right: search + alerts + user -->
+    <div style="display:flex;align-items:center;gap:12px">
+      <div style="display:flex;align-items:center;gap:6px;background:#F9FAFB;border:1px solid #E5E7EB;border-radius:9px;padding:7px 13px">
+        <svg width="14" height="14" fill="none" stroke="#9CA3AF" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8" stroke-width="2"/><path stroke-linecap="round" stroke-width="2" d="M21 21l-4.35-4.35"/></svg>
+        <input placeholder="Buscar..." style="border:none;background:transparent;outline:none;font-size:.8rem;color:#374151;width:120px" />
       </div>
-      <button onclick="openModal()" class="btn text-sm px-4 py-2">Agendar Consulta ↗</button>
+      <div style="position:relative;cursor:pointer">
+        <svg width="18" height="18" fill="none" stroke="#6B7280" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+        <div style="position:absolute;top:-3px;right:-3px;width:8px;height:8px;background:#E85D04;border-radius:50%;border:2px solid #fff"></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:9px;padding:5px 12px 5px 5px;border:1px solid #E5E7EB;border-radius:22px;cursor:pointer;background:#fff">
+        <div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#E85D04,#F97316);display:flex;align-items:center;justify-content:center;color:#fff;font-size:.72rem;font-weight:700">MG</div>
+        <div>
+          <div style="font-size:.78rem;font-weight:600;color:#111827;line-height:1.2">María García</div>
+          <div style="font-size:.68rem;color:#9CA3AF">Participante</div>
+        </div>
+        <svg width="13" height="13" fill="none" stroke="#9CA3AF" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+      </div>
+      <button onclick="openModal()" class="btn-orange" style="white-space:nowrap">Agendar consulta</button>
     </div>
   </header>
 
-  <main class="content">
+  <!-- CONTENT -->
+  <div class="content">
 
-    <!-- ─── VIEW: DASHBOARD ─── -->
+    <!-- ─── DASHBOARD ─── -->
     <div id="view-dashboard" class="view active">
-      <!-- Welcome -->
-      <div class="mb-8">
-        <h1 class="text-2xl font-bold text-white mb-1">Bienvenida, María 👋</h1>
-        <p class="text-[#94A3B8] text-sm">Aquí está el resumen de tu progreso en el Programa Ennia.</p>
+      <div style="margin-bottom:24px">
+        <h1 style="font-size:1.5rem;font-weight:700;color:#111827;margin:0 0 4px">Buenos días, María 👋</h1>
+        <p style="font-size:.83rem;color:#9CA3AF;margin:0">Revisa tu progreso en el Programa Ennia y las actividades del equipo.</p>
       </div>
 
-      <!-- KPI row -->
-      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        <div class="card">
-          <div class="text-[#94A3B8] text-xs font-semibold uppercase tracking-wide mb-3">Fase actual</div>
-          <div class="text-2xl font-bold gt mb-1">Fase 02</div>
-          <div class="text-[#94A3B8] text-xs">Intervención</div>
-          <div class="progress-track mt-4"><div class="progress-fill" style="width:16%"></div></div>
-          <div class="text-[#475569] text-[11px] mt-1">1 de 6 sesiones</div>
-        </div>
-        <div class="card">
-          <div class="text-[#94A3B8] text-xs font-semibold uppercase tracking-wide mb-3">Mi avance</div>
-          <div class="text-2xl font-bold text-emerald-400 mb-1">100%</div>
-          <div class="text-[#94A3B8] text-xs">Sesión 1 completa</div>
-          <div class="progress-track mt-4"><div class="progress-fill bg-emerald-500" style="width:100%;background:#10B981"></div></div>
-          <div class="text-[#475569] text-[11px] mt-1">Pre · Asistencia · Post · Reto</div>
-        </div>
-        <div class="card">
-          <div class="text-[#94A3B8] text-xs font-semibold uppercase tracking-wide mb-3">Equipo activo</div>
-          <div class="text-2xl font-bold text-violet-400 mb-1">12/14</div>
-          <div class="text-[#94A3B8] text-xs">Participantes</div>
-          <div class="progress-track mt-4"><div class="progress-fill" style="width:85%;background:#8B5CF6"></div></div>
-          <div class="text-[#475569] text-[11px] mt-1">85% participación</div>
-        </div>
-        <div class="card">
-          <div class="text-[#94A3B8] text-xs font-semibold uppercase tracking-wide mb-3">NPS Sesión 1</div>
-          <div class="text-2xl font-bold text-amber-400 mb-1">4.6 / 5</div>
-          <div class="text-[#94A3B8] text-xs">Satisfacción promedio</div>
-          <div class="progress-track mt-4"><div class="progress-fill" style="width:92%;background:#F59E0B"></div></div>
-          <div class="text-[#475569] text-[11px] mt-1">9 respuestas</div>
-        </div>
-      </div>
-
-      <!-- Two column: phases + actions -->
-      <div class="grid lg:grid-cols-3 gap-6 mb-6">
-
-        <!-- Phases timeline -->
-        <div class="lg:col-span-2 card">
-          <div class="flex items-center justify-between mb-6">
-            <h2 class="text-white font-semibold">Fases del Programa</h2>
-            <span class="text-[#475569] text-xs">3 fases · 6 sesiones</span>
+      <!-- Row 1: KPI cards -->
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:14px;margin-bottom:16px">
+        <!-- Orange highlight card -->
+        <div class="card-orange">
+          <div style="font-size:.7rem;font-weight:600;opacity:.8;text-transform:uppercase;letter-spacing:.04em;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center">
+            Mi Progreso
+            <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24" opacity=".7"><circle cx="12" cy="12" r="10" stroke-width="2"/><path stroke-linecap="round" stroke-width="2" d="M12 8v4l3 3"/></svg>
           </div>
-          <div class="space-y-4">
+          <div style="font-size:2rem;font-weight:800;line-height:1;margin-bottom:6px">100%</div>
+          <div style="font-size:.75rem;opacity:.85;margin-bottom:12px">Sesión 1 completada</div>
+          <div style="height:4px;background:rgba(255,255,255,.25);border-radius:2px">
+            <div style="height:100%;width:100%;background:#fff;border-radius:2px"></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;margin-top:6px">
+            <span style="font-size:.68rem;opacity:.7">0%</span>
+            <span style="font-size:.68rem;opacity:.7">100%</span>
+          </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="card">
+          <div class="stat-label" style="display:flex;justify-content:space-between;align-items:center">
+            Fase Actual
+            <svg width="14" height="14" fill="none" stroke="#9CA3AF" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+          </div>
+          <div class="stat-val" style="margin:6px 0 2px">Fase 02</div>
+          <div style="font-size:.78rem;color:#6B7280;margin-bottom:10px">Intervención</div>
+          <div class="ptrack"><div class="pfill" style="width:16.6%"></div></div>
+          <div style="display:flex;justify-content:space-between;margin-top:6px">
+            <span class="stat-delta-up">1 de 6 sesiones</span>
+          </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="card">
+          <div class="stat-label" style="display:flex;justify-content:space-between;align-items:center">
+            Equipo Activo
+            <svg width="14" height="14" fill="none" stroke="#9CA3AF" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          </div>
+          <div class="stat-val" style="margin:6px 0 2px">12 <span style="font-size:1rem;color:#9CA3AF;font-weight:400">/ 14</span></div>
+          <div style="font-size:.78rem;color:#6B7280;margin-bottom:10px">Participantes</div>
+          <div class="ptrack"><div class="pfill" style="width:85%"></div></div>
+          <div style="margin-top:6px"><span class="stat-delta-up">↑ 85% participación</span></div>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="card">
+          <div class="stat-label" style="display:flex;justify-content:space-between;align-items:center">
+            NPS Promedio
+            <svg width="14" height="14" fill="none" stroke="#9CA3AF" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/></svg>
+          </div>
+          <div class="stat-val" style="margin:6px 0 2px">4.6 <span style="font-size:1rem;color:#9CA3AF;font-weight:400">/ 5</span></div>
+          <div style="font-size:.78rem;color:#6B7280;margin-bottom:10px">Satisfacción S1</div>
+          <div class="ptrack"><div class="pfill" style="width:92%"></div></div>
+          <div style="margin-top:6px"><span class="stat-delta-up">↑ 4% vs semana pasada</span></div>
+        </div>
+      </div>
+
+      <!-- Row 2: Fases + Chart + Wallets-style -->
+      <div style="display:grid;grid-template-columns:1.1fr 1fr;gap:14px;margin-bottom:16px">
+
+        <!-- Fases timeline -->
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px">
+            <div>
+              <div style="font-size:.7rem;font-weight:600;color:#9CA3AF;text-transform:uppercase;letter-spacing:.04em;margin-bottom:2px">Estructura</div>
+              <div style="font-size:.95rem;font-weight:700;color:#111827">Fases del Programa</div>
+            </div>
+            <button class="btn-white" style="font-size:.75rem;padding:6px 12px" onclick="nav('sesion1')">Ver sesión →</button>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:0">
             <!-- Phase 1 -->
-            <div class="flex gap-4">
-              <div class="flex flex-col items-center">
-                <div class="w-8 h-8 rounded-full g flex items-center justify-center text-white text-xs font-bold flex-shrink-0">1</div>
-                <div class="w-px flex-1 bg-gradient-to-b from-blue-500 to-transparent mt-2 mb-2"></div>
+            <div style="display:flex;gap:14px;padding-bottom:18px">
+              <div style="display:flex;flex-direction:column;align-items:center">
+                <div style="width:32px;height:32px;border-radius:50%;background:#E85D04;display:flex;align-items:center;justify-content:center;color:#fff;font-size:.75rem;font-weight:700;flex-shrink:0">01</div>
+                <div style="width:1px;flex:1;background:linear-gradient(to bottom,#E85D04,#E5E7EB);margin-top:4px;min-height:24px"></div>
               </div>
-              <div class="flex-1 pb-4">
-                <div class="flex items-center justify-between mb-1">
-                  <span class="text-white font-semibold text-sm">Entender la Operación Real</span>
-                  <span class="badge-green">Completada</span>
+              <div style="flex:1;padding-top:4px">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px">
+                  <span style="font-size:.85rem;font-weight:600;color:#111827">Entender la Operación Real</span>
+                  <span class="tag tag-green">Completada</span>
                 </div>
-                <p class="text-[#94A3B8] text-xs mb-2">Diagnóstico inicial mediante evaluaciones de cultura, liderazgo y estilos de aprendizaje.</p>
-                <div class="progress-track"><div class="progress-fill" style="width:100%"></div></div>
+                <p style="font-size:.75rem;color:#9CA3AF;margin:0 0 8px;line-height:1.5">Diagnóstico de cultura, liderazgo y estilos de aprendizaje.</p>
+                <div class="ptrack"><div class="pfill" style="width:100%"></div></div>
               </div>
             </div>
             <!-- Phase 2 -->
-            <div class="flex gap-4">
-              <div class="flex flex-col items-center">
-                <div class="w-8 h-8 rounded-full border-2 border-blue-500 bg-blue-500/10 flex items-center justify-center text-blue-400 text-xs font-bold flex-shrink-0">2</div>
-                <div class="w-px flex-1 bg-[#334155] mt-2 mb-2"></div>
+            <div style="display:flex;gap:14px;padding-bottom:18px">
+              <div style="display:flex;flex-direction:column;align-items:center">
+                <div style="width:32px;height:32px;border-radius:50%;background:#FFF4EE;border:2px solid #E85D04;display:flex;align-items:center;justify-content:center;color:#E85D04;font-size:.75rem;font-weight:700;flex-shrink:0">02</div>
+                <div style="width:1px;flex:1;background:#E5E7EB;margin-top:4px;min-height:24px"></div>
               </div>
-              <div class="flex-1 pb-4">
-                <div class="flex items-center justify-between mb-1">
-                  <span class="text-white font-semibold text-sm">Intervención e Implementación</span>
-                  <span class="badge-amber">En curso</span>
+              <div style="flex:1;padding-top:4px">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px">
+                  <span style="font-size:.85rem;font-weight:600;color:#111827">Intervención e Implementación</span>
+                  <span class="tag tag-orange">En curso</span>
                 </div>
-                <p class="text-[#94A3B8] text-xs mb-2">6 sesiones presenciales semanales con retos, herramientas y aprendizaje activo.</p>
-                <div class="progress-track"><div class="progress-fill" style="width:16.6%"></div></div>
+                <p style="font-size:.75rem;color:#9CA3AF;margin:0 0 8px;line-height:1.5">6 sesiones presenciales con retos y aprendizaje activo.</p>
+                <div class="ptrack"><div class="pfill" style="width:16.6%"></div></div>
               </div>
             </div>
             <!-- Phase 3 -->
-            <div class="flex gap-4">
-              <div class="flex flex-col items-center">
-                <div class="w-8 h-8 rounded-full border border-[#334155] bg-[#0F172A] flex items-center justify-center text-[#475569] text-xs font-bold flex-shrink-0">3</div>
+            <div style="display:flex;gap:14px">
+              <div style="display:flex;flex-direction:column;align-items:center">
+                <div style="width:32px;height:32px;border-radius:50%;background:#F9FAFB;border:1.5px solid #E5E7EB;display:flex;align-items:center;justify-content:center;color:#9CA3AF;font-size:.75rem;font-weight:700;flex-shrink:0">03</div>
               </div>
-              <div class="flex-1">
-                <div class="flex items-center justify-between mb-1">
-                  <span class="text-[#94A3B8] font-semibold text-sm">Resultados y Seguimiento</span>
-                  <span class="badge-slate">Pendiente</span>
+              <div style="flex:1;padding-top:4px">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px">
+                  <span style="font-size:.85rem;font-weight:600;color:#9CA3AF">Resultados y Seguimiento</span>
+                  <span class="tag tag-gray">Pendiente</span>
                 </div>
-                <p class="text-[#475569] text-xs">Reevaluación, retroalimentación personalizada y reporte consolidado.</p>
+                <p style="font-size:.75rem;color:#C9CDD4;margin:0 0 8px;line-height:1.5">Reevaluación, retroalimentación y reporte consolidado.</p>
+                <div class="ptrack"><div class="pfill" style="width:0%"></div></div>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Quick actions -->
-        <div class="space-y-4">
-          <div class="card cursor-pointer group" onclick="navigate('sesion1')">
-            <div class="flex items-center gap-3 mb-3">
-              <div class="w-9 h-9 rounded-xl g flex items-center justify-center">
-                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-              </div>
+        <!-- Right: bar chart + spending limit -->
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <!-- Chart -->
+          <div class="card" style="flex:1">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px">
               <div>
-                <div class="text-white font-semibold text-sm">Sesión 1</div>
-                <div class="text-[#94A3B8] text-xs">Construyendo la Base</div>
+                <div style="font-size:.7rem;font-weight:600;color:#9CA3AF;text-transform:uppercase;letter-spacing:.04em;margin-bottom:2px">Participación</div>
+                <div style="font-size:.95rem;font-weight:700;color:#111827">Asistencia por sesión</div>
               </div>
-              <svg class="w-4 h-4 text-[#475569] group-hover:text-white ml-auto transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+              <div style="display:flex;align-items:center;gap:10px;font-size:.7rem;color:#9CA3AF">
+                <span style="display:flex;align-items:center;gap:4px"><span style="width:8px;height:8px;border-radius:2px;background:#E85D04;display:inline-block"></span>Asistencia</span>
+                <span style="display:flex;align-items:center;gap:4px"><span style="width:8px;height:8px;border-radius:2px;background:#E5E7EB;display:inline-block"></span>Meta</span>
+              </div>
             </div>
-            <div class="flex gap-2">
-              <span class="badge-green">Pre ✓</span>
-              <span class="badge-green">Asistencia ✓</span>
-              <span class="badge-green">Post ✓</span>
+            <div class="bar-wrap">
+              <div style="display:flex;flex-direction:column;justify-content:space-between;height:90px;margin-right:6px">
+                <span style="font-size:.62rem;color:#D1D5DB">100%</span>
+                <span style="font-size:.62rem;color:#D1D5DB">75%</span>
+                <span style="font-size:.62rem;color:#D1D5DB">50%</span>
+                <span style="font-size:.62rem;color:#D1D5DB">25%</span>
+                <span style="font-size:.62rem;color:#D1D5DB">0%</span>
+              </div>
+              <div class="bar-group"><div class="bar bar-a" style="height:78px;width:100%"></div><div class="bar bar-b" style="height:90px;width:100%"></div></div>
+              <div class="bar-group"><div class="bar" style="height:0px;background:#E5E7EB;width:100%"></div><div class="bar bar-b" style="height:90px;width:100%"></div></div>
+              <div class="bar-group"><div class="bar" style="height:0px;background:#E5E7EB;width:100%"></div><div class="bar bar-b" style="height:90px;width:100%"></div></div>
+              <div class="bar-group"><div class="bar" style="height:0px;background:#E5E7EB;width:100%"></div><div class="bar bar-b" style="height:90px;width:100%"></div></div>
+              <div class="bar-group"><div class="bar" style="height:0px;background:#E5E7EB;width:100%"></div><div class="bar bar-b" style="height:90px;width:100%"></div></div>
+              <div class="bar-group"><div class="bar" style="height:0px;background:#E5E7EB;width:100%"></div><div class="bar bar-b" style="height:90px;width:100%"></div></div>
+            </div>
+            <div style="display:flex;justify-content:space-around;margin-top:6px">
+              <span style="font-size:.65rem;color:#9CA3AF">S1</span>
+              <span style="font-size:.65rem;color:#9CA3AF">S2</span>
+              <span style="font-size:.65rem;color:#9CA3AF">S3</span>
+              <span style="font-size:.65rem;color:#9CA3AF">S4</span>
+              <span style="font-size:.65rem;color:#9CA3AF">S5</span>
+              <span style="font-size:.65rem;color:#9CA3AF">S6</span>
             </div>
           </div>
-
-          <div class="card cursor-pointer group" onclick="navigate('retos')">
-            <div class="flex items-center gap-3 mb-3">
-              <div class="w-9 h-9 rounded-xl bg-violet-500/15 flex items-center justify-center">
-                <svg class="w-4 h-4 text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
-              </div>
-              <div>
-                <div class="text-white font-semibold text-sm">Buzón de Retos</div>
-                <div class="text-[#94A3B8] text-xs">Documenta tu experiencia</div>
-              </div>
-              <svg class="w-4 h-4 text-[#475569] group-hover:text-white ml-auto transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+          <!-- Spending-limit style: retos entregados -->
+          <div class="card">
+            <div style="display:flex;justify-content:space-between;margin-bottom:10px">
+              <span style="font-size:.82rem;font-weight:600;color:#111827">Retos entregados</span>
+              <svg width="15" height="15" fill="none" stroke="#9CA3AF" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-width="2"/><path stroke-linecap="round" stroke-width="2" d="M12 8v4l3 3"/></svg>
             </div>
-            <span class="badge-amber">Reto S1 pendiente</span>
-          </div>
-
-          <div class="card cursor-pointer group" onclick="navigate('tracking')">
-            <div class="flex items-center gap-3 mb-3">
-              <div class="w-9 h-9 rounded-xl bg-emerald-500/15 flex items-center justify-center">
-                <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10"/></svg>
-              </div>
-              <div>
-                <div class="text-white font-semibold text-sm">Tracking</div>
-                <div class="text-[#94A3B8] text-xs">Progreso del equipo</div>
-              </div>
-              <svg class="w-4 h-4 text-[#475569] group-hover:text-white ml-auto transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+            <div class="ptrack" style="height:8px;margin-bottom:8px">
+              <div class="pfill" style="width:75%;background:linear-gradient(90deg,#E85D04,#FB923C)"></div>
             </div>
-            <div class="progress-track"><div class="progress-fill" style="width:75%"></div></div>
-            <div class="text-[#475569] text-[11px] mt-1">75% equipo completó S1</div>
+            <div style="display:flex;justify-content:space-between;font-size:.75rem">
+              <span style="color:#E85D04;font-weight:600">9 entregados</span>
+              <span style="color:#9CA3AF">de 12 esperados</span>
+            </div>
           </div>
         </div>
       </div>
 
-      <!-- Activity feed -->
+      <!-- Row 3: Recent Activity table -->
       <div class="card">
-        <div class="flex items-center justify-between mb-5">
-          <h2 class="text-white font-semibold">Actividad reciente del equipo</h2>
-          <button onclick="navigate('tracking')" class="text-blue-400 text-xs hover:text-blue-300 transition-colors">Ver todo →</button>
-        </div>
-        <div class="space-y-4">
-          <div class="flex items-center gap-3">
-            <div class="w-8 h-8 rounded-full g flex items-center justify-center text-white text-xs font-bold flex-shrink-0">MG</div>
-            <div class="flex-1 min-w-0">
-              <span class="text-white text-sm font-medium">María García</span>
-              <span class="text-[#94A3B8] text-sm"> completó la post-encuesta de Sesión 1</span>
-            </div>
-            <span class="text-[#475569] text-xs whitespace-nowrap">Hace 2 h</span>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+          <div>
+            <div style="font-size:.7rem;font-weight:600;color:#9CA3AF;text-transform:uppercase;letter-spacing:.04em;margin-bottom:2px">Historial</div>
+            <div style="font-size:.95rem;font-weight:700;color:#111827">Actividad Reciente</div>
           </div>
-          <div class="flex items-center gap-3">
-            <div class="w-8 h-8 rounded-full bg-violet-500/30 flex items-center justify-center text-violet-300 text-xs font-bold flex-shrink-0">CR</div>
-            <div class="flex-1 min-w-0">
-              <span class="text-white text-sm font-medium">Carlos Ruiz</span>
-              <span class="text-[#94A3B8] text-sm"> asistió a la Sesión 1</span>
+          <div style="display:flex;gap:8px">
+            <div style="display:flex;align-items:center;gap:6px;background:#F9FAFB;border:1px solid #E5E7EB;border-radius:8px;padding:6px 12px">
+              <svg width="13" height="13" fill="none" stroke="#9CA3AF" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8" stroke-width="2"/><path stroke-linecap="round" stroke-width="2" d="M21 21l-4.35-4.35"/></svg>
+              <span style="font-size:.75rem;color:#9CA3AF">Buscar</span>
             </div>
-            <span class="text-[#475569] text-xs whitespace-nowrap">Hace 5 h</span>
-          </div>
-          <div class="flex items-center gap-3">
-            <div class="w-8 h-8 rounded-full bg-emerald-500/30 flex items-center justify-center text-emerald-300 text-xs font-bold flex-shrink-0">LH</div>
-            <div class="flex-1 min-w-0">
-              <span class="text-white text-sm font-medium">Laura Hernández</span>
-              <span class="text-[#94A3B8] text-sm"> envió su reto semanal</span>
-            </div>
-            <span class="text-[#475569] text-xs whitespace-nowrap">Hace 1 d</span>
-          </div>
-          <div class="flex items-center gap-3">
-            <div class="w-8 h-8 rounded-full bg-blue-500/30 flex items-center justify-center text-blue-300 text-xs font-bold flex-shrink-0">AL</div>
-            <div class="flex-1 min-w-0">
-              <span class="text-white text-sm font-medium">Ana López</span>
-              <span class="text-[#94A3B8] text-sm"> completó la pre-encuesta de Sesión 1</span>
-            </div>
-            <span class="text-[#475569] text-xs whitespace-nowrap">Hace 2 d</span>
+            <button class="btn-white" style="font-size:.75rem;padding:6px 12px">Filtrar ↓</button>
           </div>
         </div>
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th style="padding-left:8px">#</th>
+              <th>Participante</th>
+              <th>Actividad</th>
+              <th>Estado</th>
+              <th>Fecha</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="padding-left:8px;color:#D1D5DB">001</td>
+              <td><div style="display:flex;align-items:center;gap:8px"><div style="width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,#E85D04,#FB923C);display:flex;align-items:center;justify-content:center;color:#fff;font-size:.65rem;font-weight:700">MG</div>María García</div></td>
+              <td>Post-encuesta Sesión 1</td>
+              <td><span class="tag tag-green">● Completado</span></td>
+              <td style="color:#9CA3AF">Hoy, 09:42 AM</td>
+              <td style="color:#9CA3AF;cursor:pointer;text-align:right">···</td>
+            </tr>
+            <tr>
+              <td style="padding-left:8px;color:#D1D5DB">002</td>
+              <td><div style="display:flex;align-items:center;gap:8px"><div style="width:26px;height:26px;border-radius:50%;background:#EDE9FE;display:flex;align-items:center;justify-content:center;color:#7C3AED;font-size:.65rem;font-weight:700">CR</div>Carlos Ruiz</div></td>
+              <td>Asistencia Sesión 1</td>
+              <td><span class="tag tag-green">● Completado</span></td>
+              <td style="color:#9CA3AF">Hoy, 08:15 AM</td>
+              <td style="color:#9CA3AF;cursor:pointer;text-align:right">···</td>
+            </tr>
+            <tr>
+              <td style="padding-left:8px;color:#D1D5DB">003</td>
+              <td><div style="display:flex;align-items:center;gap:8px"><div style="width:26px;height:26px;border-radius:50%;background:#ECFDF5;display:flex;align-items:center;justify-content:center;color:#059669;font-size:.65rem;font-weight:700">LH</div>Laura Hernández</div></td>
+              <td>Reto semanal S1</td>
+              <td><span class="tag tag-green">● Completado</span></td>
+              <td style="color:#9CA3AF">Ayer, 17:30 PM</td>
+              <td style="color:#9CA3AF;cursor:pointer;text-align:right">···</td>
+            </tr>
+            <tr>
+              <td style="padding-left:8px;color:#D1D5DB">004</td>
+              <td><div style="display:flex;align-items:center;gap:8px"><div style="width:26px;height:26px;border-radius:50%;background:#DBEAFE;display:flex;align-items:center;justify-content:center;color:#2563EB;font-size:.65rem;font-weight:700">AL</div>Ana López</div></td>
+              <td>Post-encuesta Sesión 1</td>
+              <td><span class="tag tag-amber">● Pendiente</span></td>
+              <td style="color:#9CA3AF">Ayer, 14:10 PM</td>
+              <td style="color:#9CA3AF;cursor:pointer;text-align:right">···</td>
+            </tr>
+            <tr>
+              <td style="padding-left:8px;color:#D1D5DB">005</td>
+              <td><div style="display:flex;align-items:center;gap:8px"><div style="width:26px;height:26px;border-radius:50%;background:#FEE2E2;display:flex;align-items:center;justify-content:center;color:#DC2626;font-size:.65rem;font-weight:700">JM</div>José Martínez</div></td>
+              <td>Asistencia Sesión 1</td>
+              <td><span class="tag tag-red">● Ausente</span></td>
+              <td style="color:#9CA3AF">Ayer, 09:00 AM</td>
+              <td style="color:#9CA3AF;cursor:pointer;text-align:right">···</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
 
 
-    <!-- ─── VIEW: SESIÓN 1 ─── -->
+    <!-- ─── SESIÓN 1 ─── -->
     <div id="view-sesion1" class="view">
-      <div class="mb-6 flex items-start justify-between">
-        <div>
-          <div class="flex items-center gap-2 mb-2">
-            <span class="badge-amber">Sesión 1 · Activa</span>
-          </div>
-          <h1 class="text-2xl font-bold text-white mb-1">Construyendo la Base del Cambio</h1>
-          <p class="text-[#94A3B8] text-sm italic">"De lo que vivimos cada día, a lo que queremos construir juntos."</p>
+      <div style="margin-bottom:20px">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+          <span class="tag tag-orange">● Sesión 1 · Activa</span>
         </div>
+        <h1 style="font-size:1.4rem;font-weight:700;color:#111827;margin:0 0 4px">Construyendo la Base del Cambio</h1>
+        <p style="font-size:.82rem;color:#9CA3AF;margin:0;font-style:italic">"De lo que vivimos cada día, a lo que queremos construir juntos."</p>
       </div>
 
-      <div class="grid lg:grid-cols-3 gap-6">
-
-        <!-- Left col: info -->
-        <div class="lg:col-span-2 space-y-5">
-          <!-- Objective -->
+      <div style="display:grid;grid-template-columns:1.4fr 1fr;gap:16px">
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <!-- Objetivo -->
           <div class="card">
-            <h2 class="text-white font-semibold mb-3 flex items-center gap-2">
-              <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-              Objetivo de la Sesión
-            </h2>
-            <p class="text-[#94A3B8] text-sm leading-relaxed">Desarrollar apertura, confianza y consciencia colectiva respecto a los desafíos actuales de KualiFin, fomentando compromiso profesional y disposición transformadora en cada uno de los participantes.</p>
+            <div style="font-size:.7rem;font-weight:600;color:#9CA3AF;text-transform:uppercase;letter-spacing:.04em;margin-bottom:10px">Objetivo</div>
+            <p style="font-size:.85rem;color:#374151;line-height:1.7;margin:0">Desarrollar apertura, confianza y consciencia colectiva respecto a los desafíos actuales de KualiFin, fomentando compromiso profesional y disposición transformadora.</p>
           </div>
-
-          <!-- Weekly activity -->
-          <div class="card border-blue-500/30" style="border-color:rgba(99,102,241,0.3)">
-            <div class="flex items-start gap-4">
-              <div class="w-10 h-10 rounded-xl g flex items-center justify-center flex-shrink-0">
-                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          <!-- Actividad semanal -->
+          <div class="card" style="border-left:3px solid #E85D04">
+            <div style="display:flex;gap:14px">
+              <div class="act-ico" style="background:#FFF4EE;flex-shrink:0">
+                <svg width="16" height="16" fill="none" stroke="#E85D04" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
               </div>
               <div>
-                <div class="text-blue-400 text-[10px] font-bold uppercase tracking-widest mb-1">Actividad Semanal</div>
-                <h3 class="text-white font-semibold mb-2">Conocernos para Crecer</h3>
-                <p class="text-[#94A3B8] text-sm leading-relaxed">Comparte tu estado de cuenta con alguien de la organización con quien no interactúes frecuentemente. Documenta la experiencia en el Buzón de Retos.</p>
-                <button onclick="navigate('retos')" class="btn mt-4 text-sm py-2 px-4">Ir al Buzón de Retos →</button>
+                <div style="font-size:.7rem;font-weight:600;color:#E85D04;text-transform:uppercase;letter-spacing:.04em;margin-bottom:3px">Actividad Semanal</div>
+                <div style="font-size:.9rem;font-weight:600;color:#111827;margin-bottom:5px">Conocernos para Crecer</div>
+                <p style="font-size:.8rem;color:#6B7280;margin:0 0 12px;line-height:1.6">Comparte tu estado de cuenta con alguien de la organización con quien no interactúes frecuentemente y documenta la experiencia.</p>
+                <button class="btn-orange" style="font-size:.78rem;padding:7px 14px" onclick="nav('retos')">Documentar en Buzón →</button>
               </div>
             </div>
           </div>
-
-          <!-- Evaluations -->
+          <!-- Evaluaciones -->
           <div class="card">
-            <h2 class="text-white font-semibold mb-4">Evaluaciones</h2>
-            <div class="space-y-3">
-              <!-- Pre -->
-              <div class="flex items-center justify-between p-4 bg-[#0F172A] rounded-xl border border-[#334155] cursor-pointer hover:border-[#475569] transition-colors group">
-                <div class="flex items-center gap-3">
-                  <div class="w-9 h-9 rounded-lg bg-blue-500/15 flex items-center justify-center">
-                    <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-                  </div>
+            <div style="font-size:.7rem;font-weight:600;color:#9CA3AF;text-transform:uppercase;letter-spacing:.04em;margin-bottom:12px">Evaluaciones</div>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:12px;background:#F9FAFB;border:1px solid #E5E7EB;border-radius:10px;cursor:pointer;transition:border-color .2s" onmouseover="this.style.borderColor='#E85D04'" onmouseout="this.style.borderColor='#E5E7EB'">
+                <div style="display:flex;align-items:center;gap:10px">
+                  <div class="act-ico" style="background:#EFF6FF;width:32px;height:32px"><svg width="14" height="14" fill="none" stroke="#2563EB" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg></div>
                   <div>
-                    <div class="text-white text-sm font-semibold">Encuesta Pre-Sesión</div>
-                    <div class="text-[#475569] text-xs">~5 min · Typeform</div>
+                    <div style="font-size:.82rem;font-weight:600;color:#111827">Encuesta Pre-Sesión</div>
+                    <div style="font-size:.72rem;color:#9CA3AF">~5 min · Typeform</div>
                   </div>
                 </div>
-                <div class="flex items-center gap-3">
-                  <span class="badge-green">Completada</span>
-                  <svg class="w-4 h-4 text-[#475569] group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-                </div>
+                <span class="tag tag-green">Completada</span>
               </div>
-              <!-- Post -->
-              <div class="flex items-center justify-between p-4 rounded-xl cursor-pointer transition-colors group gb">
-                <div class="flex items-center gap-3">
-                  <div class="w-9 h-9 rounded-lg g flex items-center justify-center">
-                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
-                  </div>
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:12px;background:#FFF4EE;border:1.5px solid #E85D04;border-radius:10px;cursor:pointer">
+                <div style="display:flex;align-items:center;gap:10px">
+                  <div class="act-ico" style="background:#E85D04;width:32px;height:32px"><svg width="14" height="14" fill="none" stroke="#fff" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg></div>
                   <div>
-                    <div class="text-white text-sm font-semibold">Encuesta Post-Sesión</div>
-                    <div class="text-[#94A3B8] text-xs">~5 min · Typeform</div>
+                    <div style="font-size:.82rem;font-weight:600;color:#111827">Encuesta Post-Sesión</div>
+                    <div style="font-size:.72rem;color:#9CA3AF">~5 min · Typeform</div>
                   </div>
                 </div>
-                <div class="flex items-center gap-3">
-                  <span class="badge-amber">Pendiente</span>
-                  <svg class="w-4 h-4 text-[#475569] group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-                </div>
+                <span class="tag tag-amber">Pendiente</span>
               </div>
-              <!-- Materials -->
-              <div class="flex items-center justify-between p-4 bg-[#0F172A] rounded-xl border border-[#334155] cursor-pointer hover:border-[#475569] transition-colors group">
-                <div class="flex items-center gap-3">
-                  <div class="w-9 h-9 rounded-lg bg-emerald-500/15 flex items-center justify-center">
-                    <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
-                  </div>
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:12px;background:#F9FAFB;border:1px solid #E5E7EB;border-radius:10px;cursor:pointer;transition:border-color .2s" onmouseover="this.style.borderColor='#E85D04'" onmouseout="this.style.borderColor='#E5E7EB'">
+                <div style="display:flex;align-items:center;gap:10px">
+                  <div class="act-ico" style="background:#ECFDF5;width:32px;height:32px"><svg width="14" height="14" fill="none" stroke="#059669" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg></div>
                   <div>
-                    <div class="text-white text-sm font-semibold">Contenido Adicional</div>
-                    <div class="text-[#475569] text-xs">Materiales de Sesión 1</div>
+                    <div style="font-size:.82rem;font-weight:600;color:#111827">Contenido Adicional</div>
+                    <div style="font-size:.72rem;color:#9CA3AF">Materiales S1</div>
                   </div>
                 </div>
-                <svg class="w-4 h-4 text-[#475569] group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+                <svg width="14" height="14" fill="none" stroke="#9CA3AF" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
               </div>
             </div>
           </div>
         </div>
-
         <!-- Right col -->
-        <div class="space-y-5">
+        <div style="display:flex;flex-direction:column;gap:14px">
           <div class="card">
-            <h3 class="text-white font-semibold mb-4 text-sm">Tu progreso en S1</h3>
-            <div class="space-y-3">
-              <div class="flex items-center justify-between">
-                <span class="text-[#94A3B8] text-xs">Pre-encuesta</span>
-                <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+            <div style="font-size:.7rem;font-weight:600;color:#9CA3AF;text-transform:uppercase;letter-spacing:.04em;margin-bottom:14px">Tu progreso en S1</div>
+            <div style="display:flex;flex-direction:column;gap:12px">
+              <div style="display:flex;justify-content:space-between;align-items:center">
+                <span style="font-size:.82rem;color:#374151">Pre-encuesta</span>
+                <div style="width:20px;height:20px;border-radius:50%;background:#ECFDF5;display:flex;align-items:center;justify-content:center"><svg width="11" height="11" fill="none" stroke="#059669" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg></div>
               </div>
-              <div class="flex items-center justify-between">
-                <span class="text-[#94A3B8] text-xs">Asistencia</span>
-                <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+              <div style="display:flex;justify-content:space-between;align-items:center">
+                <span style="font-size:.82rem;color:#374151">Asistencia</span>
+                <div style="width:20px;height:20px;border-radius:50%;background:#ECFDF5;display:flex;align-items:center;justify-content:center"><svg width="11" height="11" fill="none" stroke="#059669" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg></div>
               </div>
-              <div class="flex items-center justify-between">
-                <span class="text-[#94A3B8] text-xs">Post-encuesta</span>
-                <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+              <div style="display:flex;justify-content:space-between;align-items:center">
+                <span style="font-size:.82rem;color:#374151">Post-encuesta</span>
+                <div style="width:20px;height:20px;border-radius:50%;background:#ECFDF5;display:flex;align-items:center;justify-content:center"><svg width="11" height="11" fill="none" stroke="#059669" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg></div>
               </div>
-              <div class="flex items-center justify-between">
-                <span class="text-[#94A3B8] text-xs">Reto semanal</span>
-                <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+              <div style="display:flex;justify-content:space-between;align-items:center">
+                <span style="font-size:.82rem;color:#374151">Reto semanal</span>
+                <div style="width:20px;height:20px;border-radius:50%;background:#ECFDF5;display:flex;align-items:center;justify-content:center"><svg width="11" height="11" fill="none" stroke="#059669" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg></div>
               </div>
             </div>
-            <div class="mt-4 pt-4 border-t border-[#334155]">
-              <div class="flex items-center justify-between mb-2">
-                <span class="text-[#94A3B8] text-xs">Completado</span>
-                <span class="text-emerald-400 text-xs font-bold">100%</span>
+            <div style="margin-top:14px;padding-top:14px;border-top:1px solid #F3F4F6">
+              <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+                <span style="font-size:.78rem;color:#9CA3AF">Completado</span>
+                <span style="font-size:.78rem;font-weight:700;color:#E85D04">100%</span>
               </div>
-              <div class="progress-track"><div class="progress-fill" style="width:100%;background:#10B981"></div></div>
+              <div class="ptrack" style="height:7px"><div class="pfill" style="width:100%"></div></div>
             </div>
           </div>
-
           <div class="card">
-            <h3 class="text-white font-semibold mb-3 text-sm">Próxima sesión</h3>
-            <div class="bg-[#0F172A] rounded-xl p-4 border border-[#334155]">
-              <div class="text-[#475569] text-xs mb-1">Sesión 2</div>
-              <div class="text-white font-semibold text-sm mb-1">Por definir</div>
-              <div class="text-[#475569] text-xs">Semana del 30 de junio</div>
+            <div style="font-size:.7rem;font-weight:600;color:#9CA3AF;text-transform:uppercase;letter-spacing:.04em;margin-bottom:10px">Próxima sesión</div>
+            <div style="background:#F9FAFB;border:1px solid #E5E7EB;border-radius:10px;padding:14px">
+              <div style="font-size:.72rem;color:#9CA3AF;margin-bottom:2px">Sesión 2</div>
+              <div style="font-size:.9rem;font-weight:600;color:#111827;margin-bottom:2px">Por confirmar</div>
+              <div style="font-size:.75rem;color:#9CA3AF">Semana del 30 de junio</div>
             </div>
-            <div class="mt-3 flex items-center gap-2 text-[#475569] text-xs">
-              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <div style="display:flex;align-items:center;gap:6px;margin-top:10px;font-size:.75rem;color:#9CA3AF">
+              <svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
               Recibirás invitación de calendario
             </div>
           </div>
@@ -487,459 +562,343 @@
     </div>
 
 
-    <!-- ─── VIEW: BUZÓN DE RETOS ─── -->
+    <!-- ─── RETOS ─── -->
     <div id="view-retos" class="view">
-      <div class="mb-6">
-        <h1 class="text-2xl font-bold text-white mb-1">Buzón de Retos</h1>
-        <p class="text-[#94A3B8] text-sm">Documenta tu experiencia semanal y comparte tus aprendizajes.</p>
+      <div style="margin-bottom:20px">
+        <h1 style="font-size:1.4rem;font-weight:700;color:#111827;margin:0 0 4px">Buzón de Retos</h1>
+        <p style="font-size:.83rem;color:#9CA3AF;margin:0">Documenta tu experiencia semanal y comparte tus aprendizajes.</p>
       </div>
-
-      <div class="grid lg:grid-cols-3 gap-6">
-        <div class="lg:col-span-2">
-          <div class="card">
-            <div id="reto-form-wrap">
-              <form onsubmit="submitReto(event)" class="space-y-5">
-                <div class="grid sm:grid-cols-2 gap-4">
-                  <div>
-                    <label class="text-[#94A3B8] text-xs font-semibold uppercase tracking-wide mb-2 block">Tu nombre</label>
-                    <input type="text" placeholder="Ej. María García" class="input">
-                  </div>
-                  <div>
-                    <label class="text-[#94A3B8] text-xs font-semibold uppercase tracking-wide mb-2 block">Sesión</label>
-                    <select class="input" style="background:#0F172A">
-                      <option>Sesión 1 — Construyendo la Base del Cambio</option>
-                    </select>
-                  </div>
-                </div>
-                <div>
-                  <label class="text-[#94A3B8] text-xs font-semibold uppercase tracking-wide mb-2 block">¿Con quién realizaste el reto?</label>
-                  <input type="text" placeholder="Nombre y área de tu compañero/a" class="input">
-                </div>
-                <div>
-                  <label class="text-[#94A3B8] text-xs font-semibold uppercase tracking-wide mb-2 block">¿Qué aprendiste?</label>
-                  <textarea rows="5" placeholder="Describe lo que viviste, lo que descubriste sobre tu compañero y cómo te impactó..." class="input resize-none"></textarea>
-                </div>
-                <div>
-                  <label class="text-[#94A3B8] text-xs font-semibold uppercase tracking-wide mb-3 block">Califica la experiencia</label>
-                  <div class="grid grid-cols-3 gap-3">
-                    <button type="button" onclick="setR(this)" class="rb">😐 Regular</button>
-                    <button type="button" onclick="setR(this)" class="rb">🙂 Buena</button>
-                    <button type="button" onclick="setR(this)" class="rb">🚀 Excelente</button>
-                  </div>
-                </div>
-                <button type="submit" class="btn w-full py-3">Enviar mi Reto →</button>
-              </form>
-            </div>
-            <div id="reto-ok" class="hidden text-center py-12">
-              <div class="w-16 h-16 rounded-full bg-emerald-500/15 border border-emerald-500/20 flex items-center justify-center mx-auto mb-4">
-                <svg class="w-8 h-8 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-              </div>
-              <h3 class="text-white font-bold text-xl mb-2">¡Reto registrado!</h3>
-              <p class="text-[#94A3B8] text-sm mb-5">Tu experiencia fue enviada con éxito.</p>
-              <button onclick="resetReto()" class="btn-ghost">Enviar otro reto</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Side info -->
-        <div class="space-y-4">
-          <div class="card">
-            <h3 class="text-white font-semibold text-sm mb-3">¿Qué es el Buzón de Retos?</h3>
-            <p class="text-[#94A3B8] text-xs leading-relaxed mb-4">Es el espacio donde documentas el resultado de tu actividad semanal. Cada sesión tiene un reto práctico que debes realizar antes de la siguiente reunión.</p>
-            <div class="space-y-2">
-              <div class="flex items-center gap-2 text-[#94A3B8] text-xs"><span class="text-blue-400">①</span> Realiza la actividad semanal</div>
-              <div class="flex items-center gap-2 text-[#94A3B8] text-xs"><span class="text-blue-400">②</span> Documenta lo que aprendiste</div>
-              <div class="flex items-center gap-2 text-[#94A3B8] text-xs"><span class="text-blue-400">③</span> Envía antes de la próxima sesión</div>
-            </div>
-          </div>
-          <div class="card">
-            <h3 class="text-white font-semibold text-sm mb-3">Reto activo</h3>
-            <div class="bg-[#0F172A] rounded-xl p-4 border border-[#334155]">
-              <div class="text-violet-400 text-[10px] font-bold uppercase tracking-wide mb-1">Sesión 1</div>
-              <div class="text-white text-sm font-semibold mb-2">Conocernos para Crecer</div>
-              <p class="text-[#94A3B8] text-xs">Comparte tu estado de cuenta con alguien con quien no interactúes frecuentemente.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-
-    <!-- ─── VIEW: TRACKING ─── -->
-    <div id="view-tracking" class="view">
-      <div class="mb-6">
-        <h1 class="text-2xl font-bold text-white mb-1">Tracking de Participación</h1>
-        <p class="text-[#94A3B8] text-sm">Seguimiento del avance y compromiso del equipo KualiFin — Sesión 1 de 6.</p>
-      </div>
-
-      <!-- Metrics -->
-      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        <div class="card text-center">
-          <div class="text-3xl font-bold gt mb-1">12/14</div>
-          <div class="text-[#94A3B8] text-xs">Participantes activos</div>
-          <div class="progress-track mt-3"><div class="progress-fill" style="width:85%"></div></div>
-        </div>
-        <div class="card text-center">
-          <div class="text-3xl font-bold text-emerald-400 mb-1">87%</div>
-          <div class="text-[#94A3B8] text-xs">Asistencia S1</div>
-          <div class="progress-track mt-3"><div class="progress-fill" style="width:87%;background:#10B981"></div></div>
-        </div>
-        <div class="card text-center">
-          <div class="text-3xl font-bold text-amber-400 mb-1">9/12</div>
-          <div class="text-[#94A3B8] text-xs">Retos entregados</div>
-          <div class="progress-track mt-3"><div class="progress-fill" style="width:75%;background:#F59E0B"></div></div>
-        </div>
-        <div class="card text-center">
-          <div class="text-3xl font-bold text-violet-400 mb-1">4.6</div>
-          <div class="text-[#94A3B8] text-xs">NPS promedio</div>
-          <div class="progress-track mt-3"><div class="progress-fill" style="width:92%;background:#8B5CF6"></div></div>
-        </div>
-      </div>
-
-      <!-- Table -->
-      <div class="card" style="padding:0;overflow:hidden">
-        <div class="flex items-center justify-between p-5 border-b border-[#334155]">
-          <h2 class="text-white font-semibold">Progreso Individual</h2>
-          <div class="flex items-center gap-3">
-            <select class="bg-[#0F172A] border border-[#334155] rounded-lg px-3 py-1.5 text-[#94A3B8] text-xs outline-none">
-              <option>Sesión 1</option>
-            </select>
-          </div>
-        </div>
-        <div class="overflow-x-auto">
-          <table style="width:100%;border-collapse:collapse">
-            <thead>
-              <tr style="border-bottom:1px solid #334155">
-                <th class="text-left text-[#94A3B8] text-[11px] font-semibold uppercase tracking-wide px-5 py-3">Participante</th>
-                <th class="text-center text-[#94A3B8] text-[11px] font-semibold uppercase tracking-wide px-4 py-3">Pre</th>
-                <th class="text-center text-[#94A3B8] text-[11px] font-semibold uppercase tracking-wide px-4 py-3">Asistencia</th>
-                <th class="text-center text-[#94A3B8] text-[11px] font-semibold uppercase tracking-wide px-4 py-3">Post</th>
-                <th class="text-center text-[#94A3B8] text-[11px] font-semibold uppercase tracking-wide px-4 py-3">Reto</th>
-                <th class="text-left text-[#94A3B8] text-[11px] font-semibold uppercase tracking-wide px-4 py-3">Avance</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr class="table-row">
-                <td class="px-5 py-3.5"><div style="display:flex;align-items:center;gap:10px"><div class="g" style="width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:700;flex-shrink:0">MG</div><span style="color:#F1F5F9;font-size:.875rem">María García</span></div></td>
-                <td class="text-center px-4 py-3.5" style="color:#34D399;font-size:.875rem">✓</td>
-                <td class="text-center px-4 py-3.5" style="color:#34D399;font-size:.875rem">✓</td>
-                <td class="text-center px-4 py-3.5" style="color:#34D399;font-size:.875rem">✓</td>
-                <td class="text-center px-4 py-3.5" style="color:#34D399;font-size:.875rem">✓</td>
-                <td class="px-4 py-3.5"><div style="display:flex;align-items:center;gap:8px"><div class="progress-track" style="width:80px"><div class="progress-fill" style="width:100%;background:#10B981"></div></div><span style="color:#34D399;font-size:.75rem;font-weight:600">100%</span></div></td>
-              </tr>
-              <tr class="table-row">
-                <td class="px-5 py-3.5"><div style="display:flex;align-items:center;gap:10px"><div style="width:32px;height:32px;border-radius:50%;background:rgba(139,92,246,.25);display:flex;align-items:center;justify-content:center;color:#C4B5FD;font-size:11px;font-weight:700;flex-shrink:0">CR</div><span style="color:#F1F5F9;font-size:.875rem">Carlos Ruiz</span></div></td>
-                <td class="text-center px-4 py-3.5" style="color:#34D399;font-size:.875rem">✓</td>
-                <td class="text-center px-4 py-3.5" style="color:#34D399;font-size:.875rem">✓</td>
-                <td class="text-center px-4 py-3.5" style="color:#34D399;font-size:.875rem">✓</td>
-                <td class="text-center px-4 py-3.5" style="color:#FCD34D;font-size:.875rem">—</td>
-                <td class="px-4 py-3.5"><div style="display:flex;align-items:center;gap:8px"><div class="progress-track" style="width:80px"><div class="progress-fill" style="width:75%;background:#F59E0B"></div></div><span style="color:#FCD34D;font-size:.75rem;font-weight:600">75%</span></div></td>
-              </tr>
-              <tr class="table-row">
-                <td class="px-5 py-3.5"><div style="display:flex;align-items:center;gap:10px"><div style="width:32px;height:32px;border-radius:50%;background:rgba(59,130,246,.25);display:flex;align-items:center;justify-content:center;color:#93C5FD;font-size:11px;font-weight:700;flex-shrink:0">AL</div><span style="color:#F1F5F9;font-size:.875rem">Ana López</span></div></td>
-                <td class="text-center px-4 py-3.5" style="color:#34D399;font-size:.875rem">✓</td>
-                <td class="text-center px-4 py-3.5" style="color:#34D399;font-size:.875rem">✓</td>
-                <td class="text-center px-4 py-3.5" style="color:#FCD34D;font-size:.875rem">—</td>
-                <td class="text-center px-4 py-3.5" style="color:#FCD34D;font-size:.875rem">—</td>
-                <td class="px-4 py-3.5"><div style="display:flex;align-items:center;gap:8px"><div class="progress-track" style="width:80px"><div class="progress-fill" style="width:50%"></div></div><span style="color:#60A5FA;font-size:.75rem;font-weight:600">50%</span></div></td>
-              </tr>
-              <tr class="table-row">
-                <td class="px-5 py-3.5"><div style="display:flex;align-items:center;gap:10px"><div style="width:32px;height:32px;border-radius:50%;background:rgba(236,72,153,.2);display:flex;align-items:center;justify-content:center;color:#F9A8D4;font-size:11px;font-weight:700;flex-shrink:0">JM</div><span style="color:#F1F5F9;font-size:.875rem">José Martínez</span></div></td>
-                <td class="text-center px-4 py-3.5" style="color:#34D399;font-size:.875rem">✓</td>
-                <td class="text-center px-4 py-3.5" style="color:#475569;font-size:.875rem">✗</td>
-                <td class="text-center px-4 py-3.5" style="color:#475569;font-size:.875rem">✗</td>
-                <td class="text-center px-4 py-3.5" style="color:#475569;font-size:.875rem">✗</td>
-                <td class="px-4 py-3.5"><div style="display:flex;align-items:center;gap:8px"><div class="progress-track" style="width:80px"><div class="progress-fill" style="width:25%;background:#EC4899"></div></div><span style="color:#F9A8D4;font-size:.75rem;font-weight:600">25%</span></div></td>
-              </tr>
-              <tr class="table-row">
-                <td class="px-5 py-3.5"><div style="display:flex;align-items:center;gap:10px"><div style="width:32px;height:32px;border-radius:50%;background:rgba(16,185,129,.2);display:flex;align-items:center;justify-content:center;color:#6EE7B7;font-size:11px;font-weight:700;flex-shrink:0">LH</div><span style="color:#F1F5F9;font-size:.875rem">Laura Hernández</span></div></td>
-                <td class="text-center px-4 py-3.5" style="color:#34D399;font-size:.875rem">✓</td>
-                <td class="text-center px-4 py-3.5" style="color:#34D399;font-size:.875rem">✓</td>
-                <td class="text-center px-4 py-3.5" style="color:#34D399;font-size:.875rem">✓</td>
-                <td class="text-center px-4 py-3.5" style="color:#34D399;font-size:.875rem">✓</td>
-                <td class="px-4 py-3.5"><div style="display:flex;align-items:center;gap:8px"><div class="progress-track" style="width:80px"><div class="progress-fill" style="width:100%;background:#10B981"></div></div><span style="color:#34D399;font-size:.75rem;font-weight:600">100%</span></div></td>
-              </tr>
-              <tr class="table-row">
-                <td class="px-5 py-3.5"><div style="display:flex;align-items:center;gap:10px"><div style="width:32px;height:32px;border-radius:50%;background:rgba(245,158,11,.2);display:flex;align-items:center;justify-content:center;color:#FDE68A;font-size:11px;font-weight:700;flex-shrink:0">RP</div><span style="color:#F1F5F9;font-size:.875rem">Roberto Pérez</span></div></td>
-                <td class="text-center px-4 py-3.5" style="color:#34D399;font-size:.875rem">✓</td>
-                <td class="text-center px-4 py-3.5" style="color:#34D399;font-size:.875rem">✓</td>
-                <td class="text-center px-4 py-3.5" style="color:#FCD34D;font-size:.875rem">—</td>
-                <td class="text-center px-4 py-3.5" style="color:#34D399;font-size:.875rem">✓</td>
-                <td class="px-4 py-3.5"><div style="display:flex;align-items:center;gap:8px"><div class="progress-track" style="width:80px"><div class="progress-fill" style="width:75%;background:#F59E0B"></div></div><span style="color:#FCD34D;font-size:.75rem;font-weight:600">75%</span></div></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <div style="padding:14px 20px;border-top:1px solid #334155;text-align:center">
-          <span style="color:#475569;font-size:.8rem">Mostrando 6 de 14 participantes</span>
-        </div>
-      </div>
-    </div>
-
-
-    <!-- ─── VIEW: CONTACTO ─── -->
-    <div id="view-contacto" class="view">
-      <div class="mb-6">
-        <h1 class="text-2xl font-bold text-white mb-1">Contacto Allayi</h1>
-        <p class="text-[#94A3B8] text-sm">Para dudas sobre el programa, evaluaciones o plataforma.</p>
-      </div>
-
-      <div class="grid lg:grid-cols-2 gap-6">
-        <!-- Channels -->
-        <div class="space-y-4">
-          <div class="card">
-            <h2 class="text-white font-semibold mb-4">Canales de contacto</h2>
-            <div class="space-y-3">
-              <a href="mailto:ana.rojas@allayi.com.mx" class="flex items-center gap-4 p-4 bg-[#0F172A] rounded-xl border border-[#334155] hover:border-blue-500/40 transition-all group">
-                <div class="w-10 h-10 rounded-xl bg-blue-500/15 flex items-center justify-center flex-shrink-0">
-                  <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-                </div>
-                <div>
-                  <div class="text-[#475569] text-xs mb-0.5">Correo</div>
-                  <div class="text-white font-semibold text-sm group-hover:text-blue-400 transition-colors">ana.rojas@allayi.com.mx</div>
-                </div>
-              </a>
-              <a href="https://wa.me/521444342865" target="_blank" rel="noopener" class="flex items-center gap-4 p-4 bg-[#0F172A] rounded-xl border border-[#334155] hover:border-emerald-500/40 transition-all group">
-                <div class="w-10 h-10 rounded-xl bg-emerald-500/15 flex items-center justify-center flex-shrink-0">
-                  <svg class="w-5 h-5 text-emerald-400" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-                </div>
-                <div>
-                  <div class="text-[#475569] text-xs mb-0.5">WhatsApp</div>
-                  <div class="text-white font-semibold text-sm group-hover:text-emerald-400 transition-colors">+52 144 434 28655</div>
-                </div>
-              </a>
-            </div>
-            <div class="mt-4 p-3 bg-blue-500/8 rounded-xl border border-blue-500/15 text-[#94A3B8] text-xs flex items-start gap-2">
-              <svg class="w-3.5 h-3.5 text-blue-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-              Tiempo de respuesta: menos de 2 h en horario laboral (Lun–Vie 9–18 h)
-            </div>
-          </div>
-        </div>
-
-        <!-- Form -->
+      <div style="display:grid;grid-template-columns:1.4fr 1fr;gap:16px">
         <div class="card">
-          <h2 class="text-white font-semibold mb-5">Envíanos un mensaje</h2>
-          <form onsubmit="submitContacto(event)" class="space-y-4" id="contact-form">
-            <div>
-              <label class="text-[#94A3B8] text-xs font-semibold uppercase tracking-wide mb-2 block">Nombre</label>
-              <input type="text" placeholder="Tu nombre completo" class="input">
+          <div id="reto-form-wrap">
+            <form onsubmit="submitReto(event)" style="display:flex;flex-direction:column;gap:14px">
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+                <div>
+                  <label style="font-size:.7rem;font-weight:600;color:#9CA3AF;text-transform:uppercase;letter-spacing:.04em;display:block;margin-bottom:6px">Tu nombre</label>
+                  <input type="text" placeholder="Ej. María García" class="inp">
+                </div>
+                <div>
+                  <label style="font-size:.7rem;font-weight:600;color:#9CA3AF;text-transform:uppercase;letter-spacing:.04em;display:block;margin-bottom:6px">Sesión</label>
+                  <select class="inp" style="background:#F9FAFB"><option>Sesión 1 — Base del Cambio</option></select>
+                </div>
+              </div>
+              <div>
+                <label style="font-size:.7rem;font-weight:600;color:#9CA3AF;text-transform:uppercase;letter-spacing:.04em;display:block;margin-bottom:6px">¿Con quién realizaste el reto?</label>
+                <input type="text" placeholder="Nombre y área de tu compañero/a" class="inp">
+              </div>
+              <div>
+                <label style="font-size:.7rem;font-weight:600;color:#9CA3AF;text-transform:uppercase;letter-spacing:.04em;display:block;margin-bottom:6px">¿Qué aprendiste?</label>
+                <textarea rows="5" placeholder="Describe lo que viviste, lo que descubriste y cómo te impactó..." class="inp" style="resize:none"></textarea>
+              </div>
+              <div>
+                <label style="font-size:.7rem;font-weight:600;color:#9CA3AF;text-transform:uppercase;letter-spacing:.04em;display:block;margin-bottom:8px">Califica la experiencia</label>
+                <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
+                  <button type="button" onclick="setR(this)" class="rb">😐 Regular</button>
+                  <button type="button" onclick="setR(this)" class="rb">🙂 Buena</button>
+                  <button type="button" onclick="setR(this)" class="rb">🚀 Excelente</button>
+                </div>
+              </div>
+              <button type="submit" class="btn-orange" style="width:100%;padding:11px">Enviar mi Reto →</button>
+            </form>
+          </div>
+          <div id="reto-ok" style="display:none;text-align:center;padding:40px 0">
+            <div style="width:56px;height:56px;border-radius:50%;background:#ECFDF5;border:1px solid #D1FAE5;display:flex;align-items:center;justify-content:center;margin:0 auto 14px">
+              <svg width="26" height="26" fill="none" stroke="#059669" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
             </div>
-            <div>
-              <label class="text-[#94A3B8] text-xs font-semibold uppercase tracking-wide mb-2 block">Correo</label>
-              <input type="email" placeholder="tu@correo.com" class="input">
+            <div style="font-size:1.1rem;font-weight:700;color:#111827;margin-bottom:6px">¡Reto registrado!</div>
+            <p style="font-size:.82rem;color:#9CA3AF;margin:0 0 18px">Tu experiencia fue enviada con éxito.</p>
+            <button onclick="resetReto()" class="btn-white">Enviar otro reto</button>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <div class="card">
+            <div style="font-size:.7rem;font-weight:600;color:#9CA3AF;text-transform:uppercase;letter-spacing:.04em;margin-bottom:10px">¿Qué es el Buzón?</div>
+            <p style="font-size:.82rem;color:#6B7280;line-height:1.7;margin:0 0 12px">Es el espacio donde documentas tu actividad semanal. Cada sesión tiene un reto práctico que debes completar antes de la siguiente reunión.</p>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <div style="display:flex;align-items:center;gap:9px;font-size:.8rem;color:#374151"><div style="width:20px;height:20px;border-radius:50%;background:#E85D04;display:flex;align-items:center;justify-content:center;color:#fff;font-size:.65rem;font-weight:700;flex-shrink:0">1</div>Realiza la actividad semanal</div>
+              <div style="display:flex;align-items:center;gap:9px;font-size:.8rem;color:#374151"><div style="width:20px;height:20px;border-radius:50%;background:#E85D04;display:flex;align-items:center;justify-content:center;color:#fff;font-size:.65rem;font-weight:700;flex-shrink:0">2</div>Documenta lo aprendido</div>
+              <div style="display:flex;align-items:center;gap:9px;font-size:.8rem;color:#374151"><div style="width:20px;height:20px;border-radius:50%;background:#E85D04;display:flex;align-items:center;justify-content:center;color:#fff;font-size:.65rem;font-weight:700;flex-shrink:0">3</div>Envía antes de la próxima sesión</div>
             </div>
-            <div>
-              <label class="text-[#94A3B8] text-xs font-semibold uppercase tracking-wide mb-2 block">Tema</label>
-              <select class="input" style="background:#0F172A">
-                <option>Dudas sobre el programa</option>
-                <option>Problemas con evaluaciones</option>
-                <option>Soporte de plataforma</option>
-                <option>Otro</option>
-              </select>
+          </div>
+          <div class="card-orange">
+            <div style="font-size:.7rem;font-weight:600;opacity:.75;text-transform:uppercase;letter-spacing:.04em;margin-bottom:8px">Reto activo</div>
+            <div style="font-size:.95rem;font-weight:700;margin-bottom:6px">Conocernos para Crecer</div>
+            <p style="font-size:.8rem;opacity:.85;margin:0;line-height:1.6">Comparte tu estado de cuenta con alguien con quien no interactúes frecuentemente.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ─── TRACKING ─── -->
+    <div id="view-tracking" class="view">
+      <div style="margin-bottom:20px">
+        <h1 style="font-size:1.4rem;font-weight:700;color:#111827;margin:0 0 4px">Tracking de Participación</h1>
+        <p style="font-size:.83rem;color:#9CA3AF;margin:0">Progreso y compromiso del equipo KualiFin — Sesión 1 de 6.</p>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px;margin-bottom:16px">
+        <div class="card-orange" style="padding:16px">
+          <div style="font-size:.68rem;font-weight:600;opacity:.75;text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px">Participantes</div>
+          <div style="font-size:1.8rem;font-weight:800;line-height:1;margin-bottom:4px">12/14</div>
+          <div style="font-size:.72rem;opacity:.8">85% del equipo activo</div>
+        </div>
+        <div class="card" style="padding:16px">
+          <div style="font-size:.68rem;font-weight:600;color:#9CA3AF;text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px">Asistencia S1</div>
+          <div style="font-size:1.8rem;font-weight:800;color:#059669;line-height:1;margin-bottom:4px">87%</div>
+          <div class="ptrack" style="margin-top:8px"><div class="pfill-green" style="width:87%"></div></div>
+        </div>
+        <div class="card" style="padding:16px">
+          <div style="font-size:.68rem;font-weight:600;color:#9CA3AF;text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px">Retos S1</div>
+          <div style="font-size:1.8rem;font-weight:800;color:#D97706;line-height:1;margin-bottom:4px">9/12</div>
+          <div class="ptrack" style="margin-top:8px"><div class="pfill-amber" style="width:75%"></div></div>
+        </div>
+        <div class="card" style="padding:16px">
+          <div style="font-size:.68rem;font-weight:600;color:#9CA3AF;text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px">NPS S1</div>
+          <div style="font-size:1.8rem;font-weight:800;color:#2563EB;line-height:1;margin-bottom:4px">4.6</div>
+          <div class="ptrack" style="margin-top:8px"><div class="pfill-blue" style="width:92%"></div></div>
+        </div>
+      </div>
+      <div class="card" style="padding:0;overflow:hidden">
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:18px 20px;border-bottom:1px solid #F3F4F6">
+          <div style="font-size:.9rem;font-weight:700;color:#111827">Progreso Individual</div>
+          <div style="display:flex;gap:8px">
+            <select class="btn-white" style="font-size:.75rem;padding:6px 12px;border-radius:8px"><option>Sesión 1</option></select>
+            <button class="btn-white" style="font-size:.75rem;padding:6px 12px">Exportar ↓</button>
+          </div>
+        </div>
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th style="padding-left:20px">Participante</th>
+              <th style="text-align:center">Pre</th>
+              <th style="text-align:center">Asistencia</th>
+              <th style="text-align:center">Post</th>
+              <th style="text-align:center">Reto</th>
+              <th>Avance</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td style="padding-left:20px"><div style="display:flex;align-items:center;gap:8px"><div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#E85D04,#FB923C);display:flex;align-items:center;justify-content:center;color:#fff;font-size:.65rem;font-weight:700">MG</div>María García</div></td><td style="text-align:center"><span style="color:#059669">✓</span></td><td style="text-align:center"><span style="color:#059669">✓</span></td><td style="text-align:center"><span style="color:#059669">✓</span></td><td style="text-align:center"><span style="color:#059669">✓</span></td><td><div style="display:flex;align-items:center;gap:8px"><div class="ptrack" style="width:70px"><div class="pfill-green" style="width:100%"></div></div><span style="font-size:.72rem;font-weight:600;color:#059669">100%</span></div></td></tr>
+            <tr><td style="padding-left:20px"><div style="display:flex;align-items:center;gap:8px"><div style="width:28px;height:28px;border-radius:50%;background:#EDE9FE;display:flex;align-items:center;justify-content:center;color:#7C3AED;font-size:.65rem;font-weight:700">CR</div>Carlos Ruiz</div></td><td style="text-align:center"><span style="color:#059669">✓</span></td><td style="text-align:center"><span style="color:#059669">✓</span></td><td style="text-align:center"><span style="color:#059669">✓</span></td><td style="text-align:center"><span style="color:#D97706">—</span></td><td><div style="display:flex;align-items:center;gap:8px"><div class="ptrack" style="width:70px"><div class="pfill-amber" style="width:75%"></div></div><span style="font-size:.72rem;font-weight:600;color:#D97706">75%</span></div></td></tr>
+            <tr><td style="padding-left:20px"><div style="display:flex;align-items:center;gap:8px"><div style="width:28px;height:28px;border-radius:50%;background:#DBEAFE;display:flex;align-items:center;justify-content:center;color:#2563EB;font-size:.65rem;font-weight:700">AL</div>Ana López</div></td><td style="text-align:center"><span style="color:#059669">✓</span></td><td style="text-align:center"><span style="color:#059669">✓</span></td><td style="text-align:center"><span style="color:#D97706">—</span></td><td style="text-align:center"><span style="color:#D97706">—</span></td><td><div style="display:flex;align-items:center;gap:8px"><div class="ptrack" style="width:70px"><div class="pfill-blue" style="width:50%"></div></div><span style="font-size:.72rem;font-weight:600;color:#2563EB">50%</span></div></td></tr>
+            <tr><td style="padding-left:20px"><div style="display:flex;align-items:center;gap:8px"><div style="width:28px;height:28px;border-radius:50%;background:#FEE2E2;display:flex;align-items:center;justify-content:center;color:#DC2626;font-size:.65rem;font-weight:700">JM</div>José Martínez</div></td><td style="text-align:center"><span style="color:#059669">✓</span></td><td style="text-align:center"><span style="color:#DC2626">✗</span></td><td style="text-align:center"><span style="color:#DC2626">✗</span></td><td style="text-align:center"><span style="color:#DC2626">✗</span></td><td><div style="display:flex;align-items:center;gap:8px"><div class="ptrack" style="width:70px"><div class="pfill-red" style="width:25%"></div></div><span style="font-size:.72rem;font-weight:600;color:#DC2626">25%</span></div></td></tr>
+            <tr><td style="padding-left:20px"><div style="display:flex;align-items:center;gap:8px"><div style="width:28px;height:28px;border-radius:50%;background:#ECFDF5;display:flex;align-items:center;justify-content:center;color:#059669;font-size:.65rem;font-weight:700">LH</div>Laura Hernández</div></td><td style="text-align:center"><span style="color:#059669">✓</span></td><td style="text-align:center"><span style="color:#059669">✓</span></td><td style="text-align:center"><span style="color:#059669">✓</span></td><td style="text-align:center"><span style="color:#059669">✓</span></td><td><div style="display:flex;align-items:center;gap:8px"><div class="ptrack" style="width:70px"><div class="pfill-green" style="width:100%"></div></div><span style="font-size:.72rem;font-weight:600;color:#059669">100%</span></div></td></tr>
+            <tr><td style="padding-left:20px"><div style="display:flex;align-items:center;gap:8px"><div style="width:28px;height:28px;border-radius:50%;background:#FFFBEB;display:flex;align-items:center;justify-content:center;color:#D97706;font-size:.65rem;font-weight:700">RP</div>Roberto Pérez</div></td><td style="text-align:center"><span style="color:#059669">✓</span></td><td style="text-align:center"><span style="color:#059669">✓</span></td><td style="text-align:center"><span style="color:#D97706">—</span></td><td style="text-align:center"><span style="color:#059669">✓</span></td><td><div style="display:flex;align-items:center;gap:8px"><div class="ptrack" style="width:70px"><div class="pfill-amber" style="width:75%"></div></div><span style="font-size:.72rem;font-weight:600;color:#D97706">75%</span></div></td></tr>
+          </tbody>
+        </table>
+        <div style="padding:12px 20px;border-top:1px solid #F9FAFB;text-align:center;font-size:.78rem;color:#9CA3AF">Mostrando 6 de 14 participantes</div>
+      </div>
+    </div>
+
+
+    <!-- ─── CONTACTO ─── -->
+    <div id="view-contacto" class="view">
+      <div style="margin-bottom:20px">
+        <h1 style="font-size:1.4rem;font-weight:700;color:#111827;margin:0 0 4px">Contacto Allayi</h1>
+        <p style="font-size:.83rem;color:#9CA3AF;margin:0">Para dudas sobre el programa, evaluaciones o plataforma.</p>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <div class="card">
+            <div style="font-size:.7rem;font-weight:600;color:#9CA3AF;text-transform:uppercase;letter-spacing:.04em;margin-bottom:12px">Canales directos</div>
+            <a href="mailto:ana.rojas@allayi.com.mx" style="display:flex;align-items:center;gap:12px;padding:14px;background:#F9FAFB;border:1px solid #E5E7EB;border-radius:10px;margin-bottom:8px;text-decoration:none;transition:border-color .2s" onmouseover="this.style.borderColor='#E85D04'" onmouseout="this.style.borderColor='#E5E7EB'">
+              <div class="act-ico" style="background:#EFF6FF;width:38px;height:38px;flex-shrink:0"><svg width="16" height="16" fill="none" stroke="#2563EB" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg></div>
+              <div>
+                <div style="font-size:.7rem;color:#9CA3AF;margin-bottom:1px">Correo electrónico</div>
+                <div style="font-size:.85rem;font-weight:600;color:#111827">ana.rojas@allayi.com.mx</div>
+              </div>
+            </a>
+            <a href="https://wa.me/521444342865" target="_blank" style="display:flex;align-items:center;gap:12px;padding:14px;background:#F9FAFB;border:1px solid #E5E7EB;border-radius:10px;text-decoration:none;transition:border-color .2s" onmouseover="this.style.borderColor='#059669'" onmouseout="this.style.borderColor='#E5E7EB'">
+              <div class="act-ico" style="background:#ECFDF5;width:38px;height:38px;flex-shrink:0"><svg width="16" height="16" fill="#059669" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></div>
+              <div>
+                <div style="font-size:.7rem;color:#9CA3AF;margin-bottom:1px">WhatsApp</div>
+                <div style="font-size:.85rem;font-weight:600;color:#111827">+52 144 434 28655</div>
+              </div>
+            </a>
+            <div style="margin-top:12px;padding:10px 14px;background:#FFF4EE;border-radius:9px;font-size:.75rem;color:#C2410C;display:flex;align-items:center;gap:8px">
+              <svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              Respuesta en menos de 2 h · Lun–Vie 9–18 h
             </div>
-            <div>
-              <label class="text-[#94A3B8] text-xs font-semibold uppercase tracking-wide mb-2 block">Mensaje</label>
-              <textarea rows="4" placeholder="¿En qué podemos ayudarte?" class="input resize-none"></textarea>
-            </div>
-            <button type="submit" class="btn w-full py-3">Enviar mensaje →</button>
+          </div>
+        </div>
+        <div class="card">
+          <div style="font-size:.7rem;font-weight:600;color:#9CA3AF;text-transform:uppercase;letter-spacing:.04em;margin-bottom:14px">Enviar mensaje</div>
+          <form onsubmit="submitContacto(event)" id="cf" style="display:flex;flex-direction:column;gap:12px">
+            <div><label style="font-size:.72rem;font-weight:600;color:#374151;display:block;margin-bottom:5px">Nombre</label><input type="text" placeholder="Tu nombre completo" class="inp"></div>
+            <div><label style="font-size:.72rem;font-weight:600;color:#374151;display:block;margin-bottom:5px">Correo</label><input type="email" placeholder="tu@correo.com" class="inp"></div>
+            <div><label style="font-size:.72rem;font-weight:600;color:#374151;display:block;margin-bottom:5px">Tema</label><select class="inp" style="background:#F9FAFB"><option>Dudas sobre el programa</option><option>Problemas con evaluaciones</option><option>Soporte de plataforma</option><option>Otro</option></select></div>
+            <div><label style="font-size:.72rem;font-weight:600;color:#374151;display:block;margin-bottom:5px">Mensaje</label><textarea rows="4" placeholder="¿En qué podemos ayudarte?" class="inp" style="resize:none"></textarea></div>
+            <button type="submit" class="btn-orange" style="width:100%;padding:11px">Enviar mensaje →</button>
           </form>
         </div>
       </div>
     </div>
 
-  </main>
-</div>
+  </div><!-- /content -->
+</div><!-- /main-wrap -->
+</div><!-- /shell -->
 
 
-<!-- ═══════════════ MODAL: CONSULTA ═══════════════ -->
-<div id="modal" class="fixed inset-0 z-[100] hidden items-center justify-center p-4">
-  <div class="overlay absolute inset-0" onclick="closeModal()"></div>
-  <div class="relative bg-[#1E293B] rounded-2xl p-7 w-full max-w-md border border-[#334155] shadow-2xl">
-    <button onclick="closeModal()" class="absolute top-5 right-5 text-[#475569] hover:text-white transition-colors">
-      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+<!-- ═══ MODAL ═══ -->
+<div id="modal" style="display:none;position:fixed;inset:0;z-index:200;align-items:center;justify-content:center;padding:16px">
+  <div class="overlay" style="position:absolute;inset:0" onclick="closeModal()"></div>
+  <div style="position:relative;background:#fff;border-radius:16px;padding:28px;width:100%;max-width:420px;box-shadow:0 20px 60px rgba(0,0,0,.15)">
+    <button onclick="closeModal()" style="position:absolute;top:16px;right:16px;background:none;border:none;cursor:pointer;color:#9CA3AF;padding:4px">
+      <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
     </button>
-
-    <div class="flex items-center gap-2 mb-6">
-      <div id="d1" class="w-2 h-2 rounded-full g"></div>
-      <div class="flex-1 h-px bg-[#334155]"></div>
-      <div id="d2" class="w-2 h-2 rounded-full bg-[#334155]"></div>
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:20px">
+      <div style="width:8px;height:8px;border-radius:50%;background:#E85D04"></div>
+      <div style="flex:1;height:1px;background:#E5E7EB"></div>
+      <div id="d2" style="width:8px;height:8px;border-radius:50%;background:#E5E7EB"></div>
     </div>
-
     <div id="ms1">
-      <h3 class="text-white text-xl font-bold mb-1">Agendar Consulta</h3>
-      <p class="text-[#94A3B8] text-sm mb-5">Te contactamos en menos de 24 horas.</p>
-      <div class="space-y-3">
-        <input id="mn" type="text" placeholder="Nombre completo" class="input">
-        <input id="me" type="text" placeholder="Empresa" class="input">
-        <input id="mc" type="email" placeholder="Correo electrónico" class="input">
-        <button onclick="mNext()" class="btn w-full py-3 mt-1">Continuar →</button>
+      <div style="font-size:1.15rem;font-weight:700;color:#111827;margin-bottom:4px">Agendar Consulta</div>
+      <p style="font-size:.8rem;color:#9CA3AF;margin:0 0 18px">Te contactamos en menos de 24 horas.</p>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <input id="mn" type="text" placeholder="Nombre completo" class="inp">
+        <input id="me2" type="text" placeholder="Empresa u organización" class="inp">
+        <input id="mc" type="email" placeholder="Correo electrónico" class="inp">
+        <button onclick="mNext()" class="btn-orange" style="width:100%;padding:11px;margin-top:4px">Continuar →</button>
       </div>
     </div>
-
-    <div id="ms2" class="hidden">
-      <h3 class="text-white text-xl font-bold mb-1">Tema de consulta</h3>
-      <p class="text-[#94A3B8] text-sm mb-5">¿En qué podemos ayudarte?</p>
-      <div class="space-y-2 mb-5">
-        <label class="flex items-center gap-3 p-3.5 rounded-xl border border-[#334155] cursor-pointer hover:border-[#475569] transition-all">
-          <input type="radio" name="ct" class="accent-blue-500"><span class="text-white text-sm">Conocer el Programa Ennia</span>
-        </label>
-        <label class="flex items-center gap-3 p-3.5 rounded-xl border border-[#334155] cursor-pointer hover:border-[#475569] transition-all">
-          <input type="radio" name="ct" class="accent-blue-500"><span class="text-white text-sm">Dudas sobre evaluaciones</span>
-        </label>
-        <label class="flex items-center gap-3 p-3.5 rounded-xl border border-[#334155] cursor-pointer hover:border-[#475569] transition-all">
-          <input type="radio" name="ct" class="accent-blue-500"><span class="text-white text-sm">Soporte de plataforma</span>
-        </label>
-        <label class="flex items-center gap-3 p-3.5 rounded-xl border border-[#334155] cursor-pointer hover:border-[#475569] transition-all">
-          <input type="radio" name="ct" class="accent-blue-500"><span class="text-white text-sm">Otro</span>
-        </label>
+    <div id="ms2" style="display:none">
+      <div style="font-size:1.15rem;font-weight:700;color:#111827;margin-bottom:4px">Tema de consulta</div>
+      <p style="font-size:.8rem;color:#9CA3AF;margin:0 0 14px">¿En qué podemos ayudarte?</p>
+      <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px">
+        <label style="display:flex;align-items:center;gap:10px;padding:11px 14px;border:1px solid #E5E7EB;border-radius:9px;cursor:pointer;font-size:.83rem;color:#374151;transition:border-color .2s" onmouseover="this.style.borderColor='#E85D04'" onmouseout="this.style.borderColor='#E5E7EB'"><input type="radio" name="ct" style="accent-color:#E85D04"> Conocer el Programa Ennia</label>
+        <label style="display:flex;align-items:center;gap:10px;padding:11px 14px;border:1px solid #E5E7EB;border-radius:9px;cursor:pointer;font-size:.83rem;color:#374151;transition:border-color .2s" onmouseover="this.style.borderColor='#E85D04'" onmouseout="this.style.borderColor='#E5E7EB'"><input type="radio" name="ct" style="accent-color:#E85D04"> Dudas sobre evaluaciones</label>
+        <label style="display:flex;align-items:center;gap:10px;padding:11px 14px;border:1px solid #E5E7EB;border-radius:9px;cursor:pointer;font-size:.83rem;color:#374151;transition:border-color .2s" onmouseover="this.style.borderColor='#E85D04'" onmouseout="this.style.borderColor='#E5E7EB'"><input type="radio" name="ct" style="accent-color:#E85D04"> Soporte de plataforma</label>
+        <label style="display:flex;align-items:center;gap:10px;padding:11px 14px;border:1px solid #E5E7EB;border-radius:9px;cursor:pointer;font-size:.83rem;color:#374151;transition:border-color .2s" onmouseover="this.style.borderColor='#E85D04'" onmouseout="this.style.borderColor='#E5E7EB'"><input type="radio" name="ct" style="accent-color:#E85D04"> Otro</label>
       </div>
-      <button onclick="mConfirm()" class="btn w-full py-3">Confirmar ✓</button>
+      <button onclick="mConfirm()" class="btn-orange" style="width:100%;padding:11px">Confirmar ✓</button>
     </div>
-
-    <div id="ms3" class="hidden text-center py-4">
-      <div class="w-14 h-14 rounded-full bg-emerald-500/15 border border-emerald-500/20 flex items-center justify-center mx-auto mb-4">
-        <svg class="w-7 h-7 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+    <div id="ms3" style="display:none;text-align:center;padding:16px 0">
+      <div style="width:52px;height:52px;border-radius:50%;background:#ECFDF5;border:1px solid #D1FAE5;display:flex;align-items:center;justify-content:center;margin:0 auto 14px">
+        <svg width="24" height="24" fill="none" stroke="#059669" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
       </div>
-      <h3 class="text-white font-bold text-lg mb-2">¡Consulta agendada!</h3>
-      <p class="text-[#94A3B8] text-sm mb-5">Te contactamos en menos de 24 h.</p>
-      <button onclick="closeModal()" class="btn px-8 py-2.5">Cerrar</button>
+      <div style="font-size:1.1rem;font-weight:700;color:#111827;margin-bottom:6px">¡Consulta agendada!</div>
+      <p style="font-size:.8rem;color:#9CA3AF;margin:0 0 18px">Te contactamos en menos de 24 h.</p>
+      <button onclick="closeModal()" class="btn-orange" style="padding:9px 24px">Cerrar</button>
     </div>
   </div>
 </div>
 
 
-<!-- ═══════════════ CHAT WIDGET ═══════════════ -->
-<button id="cb" onclick="toggleChat()" class="cpulse fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full g flex items-center justify-center shadow-2xl hover:scale-110 transition-transform relative">
-  <svg id="ci" class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
-  <svg id="cx" class="w-6 h-6 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-  <div id="nd" class="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-amber-400 border-2 border-[#0F172A]"></div>
+<!-- ═══ CHAT WIDGET ═══ -->
+<button id="cb" onclick="toggleChat()" style="position:fixed;bottom:24px;right:24px;z-index:100;width:50px;height:50px;border-radius:50%;background:#E85D04;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 20px rgba(232,93,4,.4);transition:transform .2s" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
+  <svg id="ci" width="20" height="20" fill="none" stroke="#fff" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+  <svg id="cx" width="18" height="18" fill="none" stroke="#fff" viewBox="0 0 24 24" style="display:none"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+  <div id="nd" style="position:absolute;top:-2px;right:-2px;width:12px;height:12px;background:#F97316;border-radius:50%;border:2px solid #fff"></div>
 </button>
 
-<div id="chat-win" class="fixed bottom-24 right-6 z-50 hidden w-80 bg-[#1E293B] rounded-2xl border border-[#334155] shadow-2xl overflow-hidden">
-  <div class="g p-4 flex items-center gap-3">
-    <div class="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center text-white font-black text-sm">A</div>
+<div id="chat-win" style="display:none;position:fixed;bottom:84px;right:24px;z-index:99;width:300px;background:#fff;border-radius:16px;border:1px solid #E5E7EB;box-shadow:0 10px 40px rgba(0,0,0,.12);overflow:hidden;flex-direction:column;max-height:420px">
+  <div style="background:#E85D04;padding:14px 16px;display:flex;align-items:center;gap:10px">
+    <div style="width:34px;height:34px;border-radius:9px;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:.8rem">A</div>
     <div>
-      <div class="text-white font-semibold text-sm">Agente Allayi</div>
-      <div class="flex items-center gap-1.5">
-        <div class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></div>
-        <span class="text-white/70 text-xs">En línea</span>
-      </div>
+      <div style="color:#fff;font-weight:600;font-size:.85rem">Agente Allayi</div>
+      <div style="display:flex;align-items:center;gap:5px"><div style="width:6px;height:6px;border-radius:50%;background:#86EFAC"></div><span style="color:rgba(255,255,255,.8);font-size:.7rem">En línea</span></div>
     </div>
   </div>
-  <div id="chat-msgs" class="p-4 space-y-3" style="max-height:280px;overflow-y:auto">
-    <div class="msg-in flex gap-2">
-      <div class="w-7 h-7 rounded-full g flex items-center justify-center text-white text-xs font-black flex-shrink-0 mt-0.5">A</div>
-      <div class="bg-[#0F172A] rounded-2xl rounded-tl-sm px-3 py-2.5 max-w-[85%]">
-        <p class="text-white text-sm">¡Hola! 👋 ¿En qué puedo ayudarte?</p>
+  <div id="chat-msgs" style="padding:14px;display:flex;flex-direction:column;gap:10px;overflow-y:auto;flex:1;background:#F9FAFB">
+    <div class="msg-in" style="display:flex;gap:7px">
+      <div style="width:26px;height:26px;border-radius:50%;background:#E85D04;display:flex;align-items:center;justify-content:center;color:#fff;font-size:.65rem;font-weight:700;flex-shrink:0;margin-top:2px">A</div>
+      <div style="background:#fff;border-radius:12px 12px 12px 3px;padding:9px 12px;box-shadow:0 1px 3px rgba(0,0,0,.07);max-width:85%">
+        <p style="font-size:.78rem;color:#374151;margin:0;line-height:1.5">¡Hola! 👋 ¿En qué puedo ayudarte hoy?</p>
       </div>
     </div>
-    <div class="msg-in ml-9 flex flex-col gap-2">
-      <button onclick="sq('¿Cuándo es la próxima sesión?')" class="text-left text-blue-400 border border-blue-500/30 rounded-xl px-3 py-2 text-xs hover:bg-blue-500/10 transition-colors">📅 ¿Cuándo es la próxima sesión?</button>
-      <button onclick="sq('¿Cómo entrego el reto?')" class="text-left text-blue-400 border border-blue-500/30 rounded-xl px-3 py-2 text-xs hover:bg-blue-500/10 transition-colors">📝 ¿Cómo entrego el reto?</button>
-      <button onclick="sq('Soporte técnico')" class="text-left text-blue-400 border border-blue-500/30 rounded-xl px-3 py-2 text-xs hover:bg-blue-500/10 transition-colors">🛠️ Soporte técnico</button>
+    <div class="msg-in" style="margin-left:33px;display:flex;flex-direction:column;gap:5px">
+      <button onclick="sq('¿Cuándo es la próxima sesión?')" style="text-align:left;background:#fff;border:1px solid #E5E7EB;border-radius:9px;padding:7px 11px;font-size:.72rem;color:#E85D04;cursor:pointer;transition:border-color .2s" onmouseover="this.style.borderColor='#E85D04'" onmouseout="this.style.borderColor='#E5E7EB'">📅 ¿Cuándo es la próxima sesión?</button>
+      <button onclick="sq('¿Cómo entrego el reto?')" style="text-align:left;background:#fff;border:1px solid #E5E7EB;border-radius:9px;padding:7px 11px;font-size:.72rem;color:#E85D04;cursor:pointer;transition:border-color .2s" onmouseover="this.style.borderColor='#E85D04'" onmouseout="this.style.borderColor='#E5E7EB'">📝 ¿Cómo entrego el reto?</button>
+      <button onclick="sq('Soporte técnico')" style="text-align:left;background:#fff;border:1px solid #E5E7EB;border-radius:9px;padding:7px 11px;font-size:.72rem;color:#E85D04;cursor:pointer;transition:border-color .2s" onmouseover="this.style.borderColor='#E85D04'" onmouseout="this.style.borderColor='#E5E7EB'">🛠️ Soporte técnico</button>
     </div>
   </div>
-  <div class="p-3 border-t border-[#334155] flex gap-2">
-    <input id="ci2" type="text" placeholder="Escribe aquí..." class="input flex-1 py-2 text-xs" onkeypress="if(event.key==='Enter')sm()">
-    <button onclick="sm()" class="w-9 h-9 rounded-xl g flex items-center justify-center flex-shrink-0 hover:opacity-90 transition-opacity">
-      <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+  <div style="padding:10px 12px;border-top:1px solid #E5E7EB;display:flex;gap:7px;background:#fff">
+    <input id="ci2" type="text" placeholder="Escribe aquí..." class="inp" style="flex:1;padding:8px 12px;font-size:.78rem" onkeypress="if(event.key==='Enter')sm()">
+    <button onclick="sm()" style="width:34px;height:34px;border-radius:9px;background:#E85D04;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+      <svg width="14" height="14" fill="none" stroke="#fff" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
     </button>
   </div>
 </div>
 
 
-<!-- ═══════════════ JS ═══════════════ -->
+<!-- ═══ JS ═══ -->
 <script>
 const TITLES={dashboard:'Dashboard',sesion1:'Sesión 1',retos:'Buzón de Retos',tracking:'Tracking',contacto:'Contacto'};
 
-function navigate(id){
-  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
-  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
-  document.getElementById('view-'+id).classList.add('active');
-  document.querySelectorAll('.nav-item').forEach(n=>{
-    if(n.getAttribute('onclick')==="navigate('"+id+"')") n.classList.add('active');
-  });
-  document.getElementById('topbar-title').textContent=TITLES[id]||id;
-  window.scrollTo({top:0,behavior:'smooth'});
+function nav(id){
+  document.querySelectorAll('.view').forEach(v=>v.style.display='none');
+  document.querySelectorAll('.si').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-pill').forEach(n=>n.classList.remove('active'));
+  document.getElementById('view-'+id).style.display='block';
+  const si=document.querySelector(`.si[onclick="nav('${id}')"]`);
+  if(si) si.classList.add('active');
+  const np=document.getElementById('np-'+id);
+  if(np) np.classList.add('active');
+  document.querySelector('.content').scrollTop=0;
 }
 
-// Rating
 function setR(b){document.querySelectorAll('.rb').forEach(x=>x.classList.remove('sel'));b.classList.add('sel')}
 
-// Reto
-function submitReto(e){
-  e.preventDefault();
-  document.getElementById('reto-form-wrap').classList.add('hidden');
-  document.getElementById('reto-ok').classList.remove('hidden');
-}
-function resetReto(){
-  document.getElementById('reto-form-wrap').classList.remove('hidden');
-  document.getElementById('reto-ok').classList.add('hidden');
-}
+function submitReto(e){e.preventDefault();document.getElementById('reto-form-wrap').style.display='none';document.getElementById('reto-ok').style.display='block'}
+function resetReto(){document.getElementById('reto-form-wrap').style.display='block';document.getElementById('reto-ok').style.display='none'}
 
-// Contact
-function submitContacto(e){
-  e.preventDefault();
-  document.getElementById('contact-form').innerHTML='<div class="text-center py-8"><div style="font-size:2.5rem;margin-bottom:12px">✅</div><div class="text-white font-semibold text-lg">¡Mensaje enviado!</div><p class="text-[#94A3B8] text-sm mt-2">Te responderemos muy pronto.</p></div>';
-}
+function submitContacto(e){e.preventDefault();document.getElementById('cf').innerHTML='<div style="text-align:center;padding:32px 0"><div style="font-size:2rem;margin-bottom:12px">✅</div><div style="font-size:1rem;font-weight:700;color:#111827">¡Mensaje enviado!</div><p style="font-size:.8rem;color:#9CA3AF;margin-top:6px">Te responderemos muy pronto.</p></div>'}
 
-// Modal
-function openModal(){const m=document.getElementById('modal');m.classList.remove('hidden');m.classList.add('flex')}
+function openModal(){const m=document.getElementById('modal');m.style.display='flex'}
 function closeModal(){
-  const m=document.getElementById('modal');m.classList.add('hidden');m.classList.remove('flex');
-  document.getElementById('ms1').classList.remove('hidden');
-  document.getElementById('ms2').classList.add('hidden');
-  document.getElementById('ms3').classList.add('hidden');
-  document.getElementById('d2').className='w-2 h-2 rounded-full bg-[#334155]';
+  document.getElementById('modal').style.display='none';
+  document.getElementById('ms1').style.display='block';
+  document.getElementById('ms2').style.display='none';
+  document.getElementById('ms3').style.display='none';
+  document.getElementById('d2').style.background='#E5E7EB';
 }
 function mNext(){
   if(!document.getElementById('mn').value||!document.getElementById('mc').value){alert('Completa nombre y correo');return}
-  document.getElementById('ms1').classList.add('hidden');
-  document.getElementById('ms2').classList.remove('hidden');
-  document.getElementById('d2').className='w-2 h-2 rounded-full g';
+  document.getElementById('ms1').style.display='none';
+  document.getElementById('ms2').style.display='block';
+  document.getElementById('d2').style.background='#E85D04';
 }
-function mConfirm(){document.getElementById('ms2').classList.add('hidden');document.getElementById('ms3').classList.remove('hidden')}
+function mConfirm(){document.getElementById('ms2').style.display='none';document.getElementById('ms3').style.display='block'}
 
-// Chat
 let co=false;
 const BOT={
-  '¿Cuándo es la próxima sesión?':'📅 La Sesión 2 está programada para la próxima semana. Recibirás invitación de calendario con lugar y hora.',
-  '¿Cómo entrego el reto?':'📝 Ve a "Buzón de Retos" en el menú lateral, completa el formulario y haz clic en Enviar. ¡Muy sencillo!',
-  'Soporte técnico':'🛠️ Para soporte: ana.rojas@allayi.com.mx o WhatsApp +52 144 434 28655. Respuesta en menos de 2 h en horario laboral.',
-  _:'¡Gracias! Un miembro del equipo Allayi te contactará pronto. También puedes ir a la sección Contacto del menú 😊'
+  '¿Cuándo es la próxima sesión?':'📅 La Sesión 2 está programada para la próxima semana. Recibirás invitación al calendario con lugar y hora.',
+  '¿Cómo entrego el reto?':'📝 Ve a "Retos" en el menú superior, completa el formulario y haz clic en Enviar. ¡Muy sencillo!',
+  'Soporte técnico':'🛠️ Escríbenos a ana.rojas@allayi.com.mx o WhatsApp +52 144 434 28655. Respuesta en menos de 2 h hábiles.',
+  _:'¡Gracias! Un miembro del equipo Allayi te contactará pronto. También puedes ir a la sección Contacto 😊'
 };
 function toggleChat(){
   co=!co;
-  document.getElementById('chat-win').classList.toggle('hidden',!co);
-  document.getElementById('ci').classList.toggle('hidden',co);
-  document.getElementById('cx').classList.toggle('hidden',!co);
+  document.getElementById('chat-win').style.display=co?'flex':'none';
+  document.getElementById('ci').style.display=co?'none':'block';
+  document.getElementById('cx').style.display=co?'block':'none';
   if(co){const d=document.getElementById('nd');if(d)d.remove()}
 }
 function addM(t,u){
   const c=document.getElementById('chat-msgs');
   const d=document.createElement('div');
-  d.className='msg-in flex gap-2'+(u?' justify-end':'');
+  d.className='msg-in';
+  d.style.cssText='display:flex;gap:7px'+(u?';justify-content:flex-end':'');
   d.innerHTML=u
-    ?`<div style="background:#2563EB;border-radius:16px 16px 4px 16px;padding:8px 14px;max-width:85%"><p style="color:#fff;font-size:.8rem">${t}</p></div>`
-    :`<div class="w-7 h-7 rounded-full g flex items-center justify-center text-white text-xs font-black flex-shrink-0 mt-0.5">A</div>
-      <div style="background:#0F172A;border-radius:16px 16px 16px 4px;padding:8px 14px;max-width:85%"><p style="color:#F1F5F9;font-size:.8rem">${t}</p></div>`;
+    ?`<div style="background:#E85D04;border-radius:12px 12px 3px 12px;padding:9px 12px;max-width:85%"><p style="font-size:.78rem;color:#fff;margin:0;line-height:1.5">${t}</p></div>`
+    :`<div style="width:26px;height:26px;border-radius:50%;background:#E85D04;display:flex;align-items:center;justify-content:center;color:#fff;font-size:.65rem;font-weight:700;flex-shrink:0;margin-top:2px">A</div>
+      <div style="background:#fff;border-radius:12px 12px 12px 3px;padding:9px 12px;box-shadow:0 1px 3px rgba(0,0,0,.07);max-width:85%"><p style="font-size:.78rem;color:#374151;margin:0;line-height:1.5">${t}</p></div>`;
   c.appendChild(d);c.scrollTop=c.scrollHeight;
 }
-function showTyping(){
+function showT(){
   const c=document.getElementById('chat-msgs');
-  const d=document.createElement('div');
-  d.id='ti';d.className='msg-in flex gap-2';
-  d.innerHTML=`<div class="w-7 h-7 rounded-full g flex items-center justify-center text-white text-xs font-black flex-shrink-0">A</div>
-    <div style="background:#0F172A;border-radius:16px;padding:10px 14px;display:flex;gap:4px;align-items:center">
+  const d=document.createElement('div');d.id='ti';d.className='msg-in';
+  d.style.cssText='display:flex;gap:7px';
+  d.innerHTML=`<div style="width:26px;height:26px;border-radius:50%;background:#E85D04;display:flex;align-items:center;justify-content:center;color:#fff;font-size:.65rem;font-weight:700;flex-shrink:0">A</div>
+    <div style="background:#fff;border-radius:12px;padding:10px 13px;box-shadow:0 1px 3px rgba(0,0,0,.07);display:flex;gap:4px;align-items:center">
       <span class="td"></span><span class="td"></span><span class="td"></span></div>`;
   c.appendChild(d);c.scrollTop=c.scrollHeight;
 }
-function sq(t){addM(t,true);showTyping();setTimeout(()=>{document.getElementById('ti')?.remove();addM(BOT[t]||BOT._,false)},1200)}
-function sm(){
-  const i=document.getElementById('ci2');const t=i.value.trim();if(!t)return;
-  i.value='';addM(t,true);showTyping();
-  setTimeout(()=>{document.getElementById('ti')?.remove();addM(BOT._,false)},1500);
-}
+function sq(t){addM(t,true);showT();setTimeout(()=>{document.getElementById('ti')?.remove();addM(BOT[t]||BOT._,false)},1200)}
+function sm(){const i=document.getElementById('ci2');const t=i.value.trim();if(!t)return;i.value='';addM(t,true);showT();setTimeout(()=>{document.getElementById('ti')?.remove();addM(BOT._,false)},1500)}
+
+// Init: show dashboard
+document.getElementById('view-dashboard').style.display='block';
 </script>
 </body>
 </html>
